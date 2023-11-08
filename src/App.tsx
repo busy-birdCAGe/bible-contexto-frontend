@@ -1,9 +1,6 @@
-// import { useState } from "react";
 import Box from "@mui/material/Box/Box";
-import WordCard from "./components/WordCard";
-
+import Guesses from "./components/Guesses"
 function App() {
-  // const [count, setCount] = useState(0);
 
   return (
     <Box
@@ -15,7 +12,7 @@ function App() {
         minHeight: "100vh",
       }}
     >
-      <WordCard number={100} word={"apple"}/>
+      <Guesses/>
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 interface WordCardProps {
   number: number;
@@ -19,7 +19,8 @@ const WordCard = ({ number, word }: WordCardProps) => {
         display: "flex",
         alignItems: "center",
         fontSize: 24,
-        fontFamily: "monospace"
+        fontFamily: "monospace",
+        mt: "6px"
       }}
     >
       <Box
