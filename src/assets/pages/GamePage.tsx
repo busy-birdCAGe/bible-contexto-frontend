@@ -13,7 +13,7 @@ const GamePage = () => {
   ];
 
   return (
-    <Box>
+    <Box sx={{ mt: "45px" }}>
       <Title title="Bible Contexto" />
       <SectionHeader title="current" />
       <Guesses guesses={current} />
