@@ -6,17 +6,16 @@ interface WordCardProps {
 }
 
 const WordCard = ({ number, word }: WordCardProps) => {
-  let backgroundImage: string;
+  let color: string;
+  let percentage: number = ((5000 - number) / 5000) * 100;
+  console.log(word, percentage);
 
   if (number <= 300) {
-    backgroundImage =
-      "linear-gradient(to right, rgba(5, 255, 0, 1) 5%, rgba(5, 255, 0, 0.2) 5% 50%, rgba(0, 0, 0, 0) 50%)";
+    color = "5, 255";
   } else if (number <= 1000) {
-    backgroundImage =
-      "linear-gradient(to right, rgba(255, 245, 0, 1) 5%, rgba(255, 245, 0, 0.2) 5% 50%, rgba(0, 0, 0, 0) 50%)";
+    color = "255, 245";
   } else {
-    backgroundImage =
-      "linear-gradient(to right, rgba(255, 0, 0, 1) 5%, rgba(255, 0, 0, 0.2) 5% 50%, rgba(0, 0, 0, 0) 50%)";
+    color = "255, 0";
   }
 
   return (
@@ -25,7 +24,7 @@ const WordCard = ({ number, word }: WordCardProps) => {
         width: "355px",
         height: "70px",
         bgcolor: "#FFFFFF",
-        backgroundImage: backgroundImage,
+        backgroundImage: `linear-gradient(to right, rgba(${color}, 0, 1) 5%, rgba(${color}, 0, 0.2) 5% ${percentage}%, rgba(0, 0, 0, 0) ${percentage}%)`,
         borderRadius: "20px",
         overflow: "hidden",
         display: "flex",
