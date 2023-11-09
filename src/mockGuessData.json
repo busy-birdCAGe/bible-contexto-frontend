@@ -9,7 +9,18 @@
     }, {
       "number": 3000,
       "word": "coin"
-    }
+    },
+    {
+        "number": 900,
+        "word": "cake"
+      }, 
+      {
+        "number": 15,
+        "word": "lip"
+      }, {
+        "number": 1000,
+        "word": "stair"
+      }
     
   ]
   
