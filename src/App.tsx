@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box/Box";
-import Guesses from "./components/Guesses"
+import GamePage from "./assets/pages/GamePage";
 function App() {
-
   return (
     <Box
       sx={{
@@ -12,7 +11,7 @@ function App() {
         minHeight: "100vh",
       }}
     >
-      <Guesses/>
+      <GamePage />
     </Box>
   );
 }

@@ -1,17 +1,22 @@
-import { Box } from "@mui/material"
+import { Box } from "@mui/material";
 import WordCard from "./WordCard";
-import mockGuessData from "../mockGuessData.json"
 
+interface Guess {
+  number: number;
+  word: string;
+}
 interface GuessesProps {
-    guesses?: Array<{number: number, word:string}>;
+  guesses: Guess[];
 }
 
-const Guesses = (_guesses: GuessesProps) => (
+const Guesses = ({ guesses }: GuessesProps) => {
+  return (
     <Box>
-        {mockGuessData.map((guess) => (
-             <WordCard number={guess.number} word={guess.word}/>
-        ))}
+      {guesses.map((guess: Guess) => (
+        <WordCard number={guess.number} word={guess.word} />
+      ))}
     </Box>
-)
+  );
+};
 
 export default Guesses;
