@@ -3,6 +3,7 @@ import SectionHeader from "../../components/SectionHeader";
 import Guesses from "../../components/Guesses";
 import mockGuessData from "../../mockGuessData.json";
 import Title from "../../components/Title";
+import GuessInput from "../../components/GuessInput";
 
 const GamePage = () => {
   const current = [
@@ -15,6 +16,7 @@ const GamePage = () => {
   return (
     <Box sx={{ mt: "45px" }}>
       <Title title="Bible Contexto" />
+      <GuessInput />
       <SectionHeader title="current" />
       <Guesses guesses={current} />
       <SectionHeader title="previous" />
