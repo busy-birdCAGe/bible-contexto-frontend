@@ -9,6 +9,8 @@ function App() {
         textAlign: "center",
         bgcolor: "#000000",
         minHeight: "100vh",
+        maxHeight: "100vh",
+        overflow: "auto",
       }}
     >
       <GamePage />
