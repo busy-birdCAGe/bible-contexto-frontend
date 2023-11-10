@@ -1,29 +1,27 @@
-import Box from "@mui/material/Box/Box";
 import Input from "@mui/material/Input";
-import { useState } from "react";
 
-const GuessInput = () => {
-  const [inputValue, setInputValue] = useState("");
+interface GuessInputProps {
+  guess: string;
+  handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> | undefined;
+  handleSubmit: () => void;
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
+}
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("Guess was:", inputValue);
-
-    // Add your further submission logic here
-    setInputValue("");
+const GuessInput = ({guess, handleChange, handleSubmit}: GuessInputProps) => {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSubmit(); // Trigger submission on Enter key press
+    }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+
       <Input
         disableUnderline={true}
         placeholder={"Enter a word"}
-        value={inputValue}
+        value={guess}
         onChange={handleChange}
+        onKeyDown={handleKeyPress}
         sx={{
           pl: "10px",
           width: "355px",
@@ -35,7 +33,7 @@ const GuessInput = () => {
           fontWeight: "700",
         }}
       />
-    </Box>
+
   );
 };
 
