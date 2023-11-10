@@ -23,11 +23,16 @@ const GamePage = () => {
       word: inputValue,
     };
 
-    // Add your further submission logic here
     setCurrent([currentGuess]);
 
-    setGuesses((prevGuesses) => [...prevGuesses, currentGuess]);
-    console.log(guesses, currentGuess);
+    setGuesses((prevGuesses) => {
+      let sortedGuesses = [...prevGuesses, currentGuess].sort(
+        (a, b) => a.number - b.number
+      );
+
+      return sortedGuesses;
+    });
+    // console.log(guesses, currentGuess);
 
     setInputValue("");
   };
