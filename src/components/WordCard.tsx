@@ -8,7 +8,7 @@ interface WordCardProps {
 const WordCard = ({ number, word }: WordCardProps) => {
   let color: string;
   let percentage: number = ((5000 - number) / 5000) * 100;
-  console.log(word, percentage);
+  //   console.log(word, percentage);
 
   if (number <= 300) {
     color = "5, 255";

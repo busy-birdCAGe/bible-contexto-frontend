@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import WordCard from "./WordCard";
 
-interface Guess {
+export interface Guess {
   number: number;
   word: string;
 }
