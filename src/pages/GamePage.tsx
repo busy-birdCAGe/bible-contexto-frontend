@@ -6,20 +6,18 @@ import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
 import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
+import { errorMessages } from "../constants";
 
 const GamePage = () => {
 
   const [inputValue, setInputValue] = useState("");
   const [current, setCurrent] = useState<Guess[]>([]);
-
   const [guesses, setGuesses] = useState<Guess[]>([]);
 
   useEffect(() => {
-
     WOTDService.get().then((word) => {
       GuessService.init(word);
     });
-
   }, []);
 
   let gameStarted = current.length > 0;
@@ -29,23 +27,26 @@ const GamePage = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Guess was:", inputValue);
-    let currentGuess = {
-      score: GuessService.guess(inputValue),
-      word: inputValue,
-    };
-
-    setCurrent([currentGuess]);
-
-    setGuesses((prevGuesses) => {
-      let sortedGuesses = [...prevGuesses, currentGuess].sort(
-        (a, b) => a.score - b.score
-      );
-
-      return sortedGuesses;
-    });
-
-    setInputValue("");
+    try {
+      if (guesses.map((guess) => guess.word).includes(inputValue)) {
+        throw Error(errorMessages.guessing.duplicate);
+      }
+      let score = GuessService.guess(inputValue);
+      let currentGuess = {
+        score: score,
+        word: inputValue,
+      };
+      setCurrent([currentGuess]);
+      setGuesses((prevGuesses) => {
+        let sortedGuesses = [...prevGuesses, currentGuess].sort(
+          (a, b) => a.score - b.score
+        );
+        return sortedGuesses;
+      });
+      setInputValue("");
+    } catch (error: any) {
+      alert(error.message);
+    }
   };
 
   return (
