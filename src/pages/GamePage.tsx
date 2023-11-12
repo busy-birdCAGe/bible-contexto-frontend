@@ -1,15 +1,27 @@
 import Box from "@mui/material/Box/Box";
-import SectionHeader from "../../components/SectionHeader";
-import Guesses, { Guess } from "../../components/Guesses";
-import Title from "../../components/Title";
-import GuessInput from "../../components/GuessInput";
-import { useState } from "react";
+import SectionHeader from "../components/SectionHeader";
+import Guesses, { Guess } from "../components/Guesses";
+import Title from "../components/Title";
+import GuessInput from "../components/GuessInput";
+import { useState, useEffect } from "react";
+import WOTDService from "../services/WordOfTheDayService";
+import GuessService from "../services/GuessService";
 
 const GamePage = () => {
+
   const [inputValue, setInputValue] = useState("");
   const [current, setCurrent] = useState<Guess[]>([]);
 
   const [guesses, setGuesses] = useState<Guess[]>([]);
+
+  useEffect(() => {
+
+    WOTDService.get().then((word) => {
+      GuessService.init(word);
+    });
+
+  }, []);
+
   let gameStarted = current.length > 0;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +31,7 @@ const GamePage = () => {
   const handleSubmit = () => {
     console.log("Guess was:", inputValue);
     let currentGuess = {
-      number: Math.floor(Math.random() * 3000),
+      score: GuessService.guess(inputValue),
       word: inputValue,
     };
 
@@ -27,12 +39,11 @@ const GamePage = () => {
 
     setGuesses((prevGuesses) => {
       let sortedGuesses = [...prevGuesses, currentGuess].sort(
-        (a, b) => a.number - b.number
+        (a, b) => a.score - b.score
       );
 
       return sortedGuesses;
     });
-    // console.log(guesses, currentGuess);
 
     setInputValue("");
   };

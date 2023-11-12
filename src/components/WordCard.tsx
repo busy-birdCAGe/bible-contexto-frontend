@@ -1,18 +1,18 @@
 import { Box } from "@mui/material";
 
 interface WordCardProps {
-  number: number;
+  score: number;
   word: string;
 }
 
-const WordCard = ({ number, word }: WordCardProps) => {
+const WordCard = ({ score, word }: WordCardProps) => {
   let color: string;
-  let percentage: number = ((5000 - number) / 5000) * 100;
+  let percentage: number = ((5000 - score) / 5000) * 100;
   //   console.log(word, percentage);
 
-  if (number <= 300) {
+  if (score <= 300) {
     color = "5, 255";
-  } else if (number <= 1000) {
+  } else if (score <= 1000) {
     color = "255, 245";
   } else {
     color = "255, 0";
@@ -52,10 +52,10 @@ const WordCard = ({ number, word }: WordCardProps) => {
           justifyContent: "center",
         }}
       >
-        {number}
+        {score}
       </Box>
       {/* <Typography sx={{width: "235px", textAlign: "center", bgcolor: "#000000"}}>{word}</Typography> */}
-      {/* <Typography sx={{ textAlign: "right", justifyContent: "center", bgcolor:"#eeeeee", display: "flex"}}>{number}</Typography> */}
+      {/* <Typography sx={{ textAlign: "right", justifyContent: "center", bgcolor:"#eeeeee", display: "flex"}}>{score}</Typography> */}
     </Box>
   );
 };
