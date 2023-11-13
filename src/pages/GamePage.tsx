@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
+import porterStemmer from "@stdlib/nlp-porter-stemmer";
 
 const GamePage = () => {
 
@@ -27,11 +28,12 @@ const GamePage = () => {
   };
 
   const handleSubmit = () => {
+    let stemmed_word = porterStemmer(inputValue);
     try {
-      if (guesses.map((guess) => guess.word).includes(inputValue)) {
+      if (guesses.map((guess) => guess.word).includes(stemmed_word)) {
         throw Error(errorMessages.guessing.duplicate);
       }
-      let score = GuessService.guess(inputValue);
+      let score = GuessService.guess(stemmed_word);
       let currentGuess = {
         score: score,
         word: inputValue,

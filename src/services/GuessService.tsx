@@ -17,7 +17,7 @@ export default new class GuessService {
   guess(word: string): number {
     if (!this.word_list) {
         throw Error(errorMessages.guessing.noData)
-    } 
+    }
     let index = this.word_list.indexOf(word);
     if (index == -1) {
         throw Error(errorMessages.guessing.unknown)
