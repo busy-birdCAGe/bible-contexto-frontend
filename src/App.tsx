@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box/Box";
-import GamePage from "./assets/pages/GamePage";
+import GamePage from "./pages/GamePage";
 function App() {
   return (
     <Box
