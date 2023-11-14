@@ -22,17 +22,18 @@ const WordCard = ({ score, word }: WordCardProps) => {
       sx={{
         width: "355px",
         height: "70px",
-        // height: "50px",
+        // height: "38px",
         // bgcolor: "#FFFFFF",
 
         bgcolor: "rgba(60, 59, 59, 1)",
         backgroundImage: `linear-gradient(to right, rgba(${color}, 0, 1) 5%, rgba(${color}, 0, 0.8) 5% ${percentage}%, rgba(60, 59, 59, 1) ${percentage}%)`,
-        // borderRadius: "20px",
-        borderRadius: "10px",
+        borderRadius: "20px",
+        // borderRadius: "8px",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
         fontSize: 24,
+        // fontSize: 18,
         fontFamily: "monospace",
         mt: "6px",
         color: "white"
