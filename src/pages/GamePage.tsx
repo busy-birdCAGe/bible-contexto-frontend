@@ -8,9 +8,9 @@ import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
 import porterStemmer from "@stdlib/nlp-porter-stemmer";
+import GameInfoHeader from "../components/GameInfoHeader";
 
 const GamePage = () => {
-
   const [inputValue, setInputValue] = useState("");
   const [current, setCurrent] = useState<Guess[]>([]);
   const [guesses, setGuesses] = useState<Guess[]>([]);
@@ -53,17 +53,21 @@ const GamePage = () => {
 
   return (
     <Box sx={{ mt: "45px" }}>
-      <Title title="Bible Contexto" />
+      <Title title="Contexto" />
       {/* <Box component="form" onSubmit={handleSubmit}> */}
+      <Box sx={{display:"flex"}}>
+        <GameInfoHeader title={"Game:"} count={1} />
+        <GameInfoHeader title={"Guesses:"} count={guesses.length} />
+      </Box>
       <GuessInput
         guess={inputValue}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
       {/* </Box> */}
-      {gameStarted && <SectionHeader title="current" />}
+      {gameStarted && <SectionHeader title="Current" />}
       <Guesses guesses={current} />
-      {gameStarted && <SectionHeader title="previous" />}
+      {gameStarted && <SectionHeader title="Previous" />}
       <Guesses guesses={guesses} />
     </Box>
   );
