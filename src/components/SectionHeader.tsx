@@ -14,11 +14,12 @@ const SectionHeader = ({ title }: SectionHeaderProps) => {
         fontSize: 20,
         fontWeight: "700",
         letterSpacing: ".1px",
+        width:"100%"
       }}
     >
-      {title}
+        {title}
     </Box>
   );
 };
 
-export default SectionHeader;
+export default SectionHeader

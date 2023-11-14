@@ -9,6 +9,7 @@ import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
 import porterStemmer from "@stdlib/nlp-porter-stemmer";
 import GameInfoHeader from "../components/GameInfoHeader";
+import CongratsSection from "../components/CongratsSection";
 
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
@@ -52,10 +53,21 @@ const GamePage = () => {
   };
 
   return (
-    <Box sx={{ mt: "45px" }}>
+    <Box
+      sx={{
+        mt: "45px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Title title="Contexto" />
+
+      {current.length && current[0].score == 1 && (
+        <CongratsSection wordNumber={1} guessCount={guesses.length} />
+      )}
       {/* <Box component="form" onSubmit={handleSubmit}> */}
-      <Box sx={{display:"flex"}}>
+      <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Game:"} count={1} />
         <GameInfoHeader title={"Guesses:"} count={guesses.length} />
       </Box>

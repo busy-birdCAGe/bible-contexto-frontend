@@ -21,10 +21,12 @@ const WordCard = ({ score, word }: WordCardProps) => {
     <Box
       sx={{
         width: "355px",
-        height: "70px",
+        // height: "70px",
+        height: "50px",
         bgcolor: "#FFFFFF",
         backgroundImage: `linear-gradient(to right, rgba(${color}, 0, 1) 5%, rgba(${color}, 0, 0.2) 5% ${percentage}%, rgba(0, 0, 0, 0) ${percentage}%)`,
-        borderRadius: "20px",
+        // borderRadius: "20px",
+        borderRadius: "10px",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
