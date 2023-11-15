@@ -17,7 +17,7 @@ const CongratsSection = ({
         textAlign: "center",
         color: "white",
         fontFamily: "monospace",
-        border: "5px solid white ",
+        border: "3px solid white ",
         borderRadius: "10px",
         my: "15px",
       }}

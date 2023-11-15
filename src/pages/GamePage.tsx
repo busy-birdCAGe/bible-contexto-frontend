@@ -9,14 +9,16 @@ import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
 import porterStemmer from "@stdlib/nlp-porter-stemmer";
 import GameInfoHeader from "../components/GameInfoHeader";
-import CongratsSection, { CongratsSectionProps } from "../components/CongratsSection";
+import CongratsSection from "../components/CongratsSection";
 
 
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
-  const [gameInfo, setGameInfo] = useState<CongratsSectionProps>({gameId: undefined, numberOfAttempts: undefined});
+  const gameId = 1; //hardcoded for now
   const [current, setCurrent] = useState<Guess[]>([]);
   const [guesses, setGuesses] = useState<Guess[]>([]);
+  const [guessCount, setGuessCount] = useState<number>(0);
+  const [wordFound, setWordFound] = useState<boolean>(false);
 
   useEffect(() => {
     WOTDService.get().then((word) => {
@@ -30,7 +32,7 @@ const GamePage = () => {
     setInputValue(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleGuess = () => {
     let stemmed_word = porterStemmer(inputValue);
     try {
       if (guesses.map((guess) => guess.word).includes(stemmed_word)) {
@@ -49,8 +51,11 @@ const GamePage = () => {
         );
         return sortedGuesses;
       });
+      if (!wordFound) {
+        setGuessCount(guessCount+1);
+      }
       if (currentGuess.score == 1) {
-        setGameInfo({gameId: 1, numberOfAttempts: guesses.length+1});
+        setWordFound(true);
       }
       setInputValue("");
     } catch (error: any) {
@@ -69,18 +74,21 @@ const GamePage = () => {
     >
       <Title title="Contexto" />
 
-      {!!gameInfo.numberOfAttempts && (
-        <CongratsSection gameId={gameInfo.gameId} numberOfAttempts={gameInfo.numberOfAttempts} />
+      {wordFound && (
+        <CongratsSection
+          gameId={gameId}
+          numberOfAttempts={guessCount}
+        />
       )}
       {/* <Box component="form" onSubmit={handleSubmit}> */}
       <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Game:"} count={1} />
-        <GameInfoHeader title={"Guesses:"} count={guesses.length} />
+        <GameInfoHeader title={"Guesses:"} count={guessCount} />
       </Box>
       <GuessInput
         guess={inputValue}
         handleChange={handleChange}
-        handleSubmit={handleSubmit}
+        handleSubmit={handleGuess}
       />
       {/* </Box> */}
       {gameStarted && <SectionHeader title="Current" />}

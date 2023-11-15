@@ -7,7 +7,7 @@ interface WordCardProps {
 
 const WordCard = ({ score, word }: WordCardProps) => {
   let color: string;
-  let percentage: number = ((5000 - score) / 5000) * 100;
+  let percentage: number = 100 * 1.001 * Math.pow(0.9989, score);
 
   if (score <= 300) {
     color = "5, 255";
@@ -21,22 +21,17 @@ const WordCard = ({ score, word }: WordCardProps) => {
     <Box
       sx={{
         width: "355px",
-        height: "70px",
-        // height: "38px",
-        // bgcolor: "#FFFFFF",
-
+        height: "38px",
         bgcolor: "rgba(60, 59, 59, 1)",
-        backgroundImage: `linear-gradient(to right, rgba(${color}, 0, 1) 5%, rgba(${color}, 0, 0.8) 5% ${percentage}%, rgba(60, 59, 59, 1) ${percentage}%)`,
-        borderRadius: "20px",
-        // borderRadius: "8px",
+        backgroundImage: `linear-gradient(to right, rgba(${color}, 0, 1) 2.5%, rgba(${color}, 0, 0.8) 2.5% ${percentage}%, rgba(60, 59, 59, 1) ${percentage}%)`,
+        borderRadius: "8px",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
-        fontSize: 24,
-        // fontSize: 18,
+        fontSize: 18,
         fontFamily: "monospace",
         mt: "6px",
-        color: "white"
+        color: "white",
       }}
     >
       <Box
