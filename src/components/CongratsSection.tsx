@@ -1,22 +1,25 @@
 import Box from "@mui/material/Box/Box";
 
-interface CongratsSectionProps {
-  wordNumber: number;
-  guessCount: number;
+export interface CongratsSectionProps {
+  gameId?: number;
+  numberOfAttempts?: number;
 }
-const CongratsSection = ({ wordNumber, guessCount }: CongratsSectionProps) => {
+const CongratsSection = ({
+  gameId,
+  numberOfAttempts,
+}: CongratsSectionProps) => {
   return (
     <Box
       sx={{
         width: "300px",
-        height: "200px",
+        minHeight: "200px",
         bgcolor: "rgba(34, 34, 34, 1)",
         textAlign: "center",
         color: "white",
         fontFamily: "monospace",
         border: "5px solid white ",
         borderRadius: "10px",
-        my: "15px"
+        my: "15px",
       }}
     >
       <Box
@@ -33,8 +36,8 @@ const CongratsSection = ({ wordNumber, guessCount }: CongratsSectionProps) => {
       </Box>
 
       <Box sx={{ fontSize: 20, fontWeight: "700" }}>
-        <Box sx={{}}> You got word#{wordNumber}</Box>
-        <Box sx={{}}> in {guessCount} guesses</Box>
+        <Box sx={{}}> You got word #{gameId}</Box>
+        <Box sx={{}}> in {numberOfAttempts} guesses</Box>
       </Box>
     </Box>
   );

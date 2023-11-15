@@ -9,10 +9,12 @@ import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
 import porterStemmer from "@stdlib/nlp-porter-stemmer";
 import GameInfoHeader from "../components/GameInfoHeader";
-import CongratsSection from "../components/CongratsSection";
+import CongratsSection, { CongratsSectionProps } from "../components/CongratsSection";
+
 
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
+  const [gameInfo, setGameInfo] = useState<CongratsSectionProps>({gameId: undefined, numberOfAttempts: undefined});
   const [current, setCurrent] = useState<Guess[]>([]);
   const [guesses, setGuesses] = useState<Guess[]>([]);
 
@@ -39,6 +41,7 @@ const GamePage = () => {
         score: score,
         word: inputValue,
       };
+      
       setCurrent([currentGuess]);
       setGuesses((prevGuesses) => {
         let sortedGuesses = [...prevGuesses, currentGuess].sort(
@@ -46,6 +49,9 @@ const GamePage = () => {
         );
         return sortedGuesses;
       });
+      if (currentGuess.score == 1) {
+        setGameInfo({gameId: 1, numberOfAttempts: guesses.length+1});
+      }
       setInputValue("");
     } catch (error: any) {
       alert(error.message);
@@ -63,8 +69,8 @@ const GamePage = () => {
     >
       <Title title="Contexto" />
 
-      {current.length && current[0].score == 1 && (
-        <CongratsSection wordNumber={1} guessCount={guesses.length} />
+      {!!gameInfo.numberOfAttempts && (
+        <CongratsSection gameId={gameInfo.gameId} numberOfAttempts={gameInfo.numberOfAttempts} />
       )}
       {/* <Box component="form" onSubmit={handleSubmit}> */}
       <Box sx={{ display: "flex", width: "100%" }}>
