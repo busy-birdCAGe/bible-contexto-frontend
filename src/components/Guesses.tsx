@@ -6,14 +6,19 @@ export interface Guess {
   word: string;
 }
 interface GuessesProps {
+  currentGuess?: Guess; 
   guesses: Guess[];
 }
 
-const Guesses = ({ guesses }: GuessesProps) => {
+const Guesses = ({ guesses, currentGuess }: GuessesProps) => {
   return (
     <Box>
       {guesses.map((guess: Guess) => (
-        <WordCard score={guess.score} word={guess.word} />
+        <WordCard
+          score={guess.score}
+          word={guess.word}
+          highlighted={currentGuess? guess.word == currentGuess.word : false}
+        />
       ))}
     </Box>
   );
