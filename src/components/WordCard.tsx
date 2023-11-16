@@ -33,7 +33,7 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
         fontFamily: "monospace",
         mt: "6px",
         color: "white",
-        border: highlighted && "3px solid white ",
+        border: highlighted ? "2px solid white ": "",
       }}
     >
       <Box
