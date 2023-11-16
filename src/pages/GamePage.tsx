@@ -66,13 +66,13 @@ const GamePage = () => {
   return (
     <Box
       sx={{
-        mt: "45px",
+        mt: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
-      <Title title="Contexto" />
+      <Title title="Bible Contexto" />
 
       {wordFound && (
         <CongratsSection
