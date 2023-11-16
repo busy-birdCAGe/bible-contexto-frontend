@@ -19,6 +19,7 @@ const GamePage = () => {
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const [guessCount, setGuessCount] = useState<number>(0);
   const [wordFound, setWordFound] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     WOTDService.get().then((word) => {
@@ -33,6 +34,7 @@ const GamePage = () => {
   };
 
   const handleGuess = () => {
+    setErrorMessage("")
     let stemmed_word = porterStemmer(inputValue);
     try {
       if (guesses.map((guess) => guess.word).includes(stemmed_word)) {
@@ -59,7 +61,11 @@ const GamePage = () => {
       }
       setInputValue("");
     } catch (error: any) {
-      alert(error.message);
+      setErrorMessage(error.message)
+      if(error.message.includes("used")){
+        setInputValue("");
+      }
+      // alert(error.message);
     }
   };
 
@@ -90,6 +96,7 @@ const GamePage = () => {
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
+      <GameInfoHeader title={errorMessage}/>
       {/* </Box> */}
       {gameStarted && <SectionHeader title="Current" />}
       <Guesses guesses={current} />
