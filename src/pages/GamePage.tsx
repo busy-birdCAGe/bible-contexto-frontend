@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
-import porterStemmer from "@stdlib/nlp-porter-stemmer";
+import { stem } from "stemr";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 
@@ -30,8 +30,9 @@ const GamePage = () => {
   };
 
   const handleGuess = () => {
-    setErrorMessage("")
-    let stemmed_word = porterStemmer(inputValue);
+    setErrorMessage("");
+    let stemmed_word = stem(inputValue);
+    console.log(stemmed_word);
     try {
       if (guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
         throw Error(errorMessages.guessing.duplicate);
@@ -40,9 +41,9 @@ const GamePage = () => {
       let currentGuess = {
         score,
         word: inputValue,
-        stemmed_word
+        stemmed_word,
       };
-      
+
       setCurrent(currentGuess);
       setGuesses((prevGuesses) => {
         let sortedGuesses = [...prevGuesses, currentGuess].sort(
@@ -51,14 +52,14 @@ const GamePage = () => {
         return sortedGuesses;
       });
       if (!wordFound) {
-        setGuessCount(guessCount+1);
+        setGuessCount(guessCount + 1);
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
       }
       setInputValue("");
     } catch (error: any) {
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
       if (error.message == errorMessages.guessing.duplicate) {
         setInputValue("");
       }
@@ -91,10 +92,7 @@ const GamePage = () => {
       />
       <GameInfoHeader title={errorMessage} />
       {/* </Box> */}
-      <Guesses
-        guesses={current ? [current] : []}
-        currentGuess={current}
-      />
+      <Guesses guesses={current ? [current] : []} currentGuess={current} />
       <br></br>
       <Guesses guesses={guesses} currentGuess={current} />
     </Box>
