@@ -10,7 +10,6 @@ import porterStemmer from "@stdlib/nlp-porter-stemmer";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 
-
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
   const gameId = 1; //hardcoded for now
@@ -34,13 +33,14 @@ const GamePage = () => {
     setErrorMessage("")
     let stemmed_word = porterStemmer(inputValue);
     try {
-      if (guesses.map((guess) => guess.word).includes(stemmed_word)) {
+      if (guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
         throw Error(errorMessages.guessing.duplicate);
       }
       let score = GuessService.guess(stemmed_word);
       let currentGuess = {
-        score: score,
+        score,
         word: inputValue,
+        stemmed_word
       };
       
       setCurrent(currentGuess);
@@ -59,10 +59,9 @@ const GamePage = () => {
       setInputValue("");
     } catch (error: any) {
       setErrorMessage(error.message)
-      if(error.message.includes("used")){
+      if (error.message == errorMessages.guessing.duplicate) {
         setInputValue("");
       }
-      // alert(error.message);
     }
   };
 

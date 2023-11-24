@@ -4,6 +4,7 @@ import WordCard from "./WordCard";
 export interface Guess {
   score: number;
   word: string;
+  stemmed_word: string;
 }
 interface GuessesProps {
   currentGuess?: Guess; 
