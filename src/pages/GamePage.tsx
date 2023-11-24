@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box/Box";
-import SectionHeader from "../components/SectionHeader";
 import Guesses, { Guess } from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
@@ -11,14 +10,14 @@ import porterStemmer from "@stdlib/nlp-porter-stemmer";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 
-
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
   const gameId = 1; //hardcoded for now
-  const [current, setCurrent] = useState<Guess[]>([]);
+  const [current, setCurrent] = useState<Guess>();
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const [guessCount, setGuessCount] = useState<number>(0);
   const [wordFound, setWordFound] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     WOTDService.get().then((word) => {
@@ -26,25 +25,25 @@ const GamePage = () => {
     });
   }, []);
 
-  let gameStarted = current.length > 0;
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleGuess = () => {
+    setErrorMessage("")
     let stemmed_word = porterStemmer(inputValue);
     try {
-      if (guesses.map((guess) => guess.word).includes(stemmed_word)) {
+      if (guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
         throw Error(errorMessages.guessing.duplicate);
       }
       let score = GuessService.guess(stemmed_word);
       let currentGuess = {
-        score: score,
+        score,
         word: inputValue,
+        stemmed_word
       };
       
-      setCurrent([currentGuess]);
+      setCurrent(currentGuess);
       setGuesses((prevGuesses) => {
         let sortedGuesses = [...prevGuesses, currentGuess].sort(
           (a, b) => a.score - b.score
@@ -59,26 +58,26 @@ const GamePage = () => {
       }
       setInputValue("");
     } catch (error: any) {
-      alert(error.message);
+      setErrorMessage(error.message)
+      if (error.message == errorMessages.guessing.duplicate) {
+        setInputValue("");
+      }
     }
   };
 
   return (
     <Box
       sx={{
-        mt: "45px",
+        mt: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
-      <Title title="Contexto" />
+      <Title title="Bible Contexto" />
 
       {wordFound && (
-        <CongratsSection
-          gameId={gameId}
-          numberOfAttempts={guessCount}
-        />
+        <CongratsSection gameId={gameId} numberOfAttempts={guessCount} />
       )}
       {/* <Box component="form" onSubmit={handleSubmit}> */}
       <Box sx={{ display: "flex", width: "100%" }}>
@@ -90,11 +89,14 @@ const GamePage = () => {
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
+      <GameInfoHeader title={errorMessage} />
       {/* </Box> */}
-      {gameStarted && <SectionHeader title="Current" />}
-      <Guesses guesses={current} />
-      {gameStarted && <SectionHeader title="Previous" />}
-      <Guesses guesses={guesses} />
+      <Guesses
+        guesses={current ? [current] : []}
+        currentGuess={current}
+      />
+      <br></br>
+      <Guesses guesses={guesses} currentGuess={current} />
     </Box>
   );
 };

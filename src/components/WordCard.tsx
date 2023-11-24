@@ -3,9 +3,10 @@ import { Box } from "@mui/material";
 interface WordCardProps {
   score: number;
   word: string;
+  highlighted?: boolean;
 }
 
-const WordCard = ({ score, word }: WordCardProps) => {
+const WordCard = ({ score, word, highlighted }: WordCardProps) => {
   let color: string;
   let percentage: number = 100 * 1.001 * Math.pow(0.9989, score);
 
@@ -32,6 +33,7 @@ const WordCard = ({ score, word }: WordCardProps) => {
         fontFamily: "monospace",
         mt: "6px",
         color: "white",
+        border: highlighted ? "2px solid white ": "",
       }}
     >
       <Box

@@ -31,6 +31,7 @@ const GuessInput = ({guess, handleChange, handleSubmit}: GuessInputProps) => {
           fontFamily: "monospace",
           fontSize: 24,
           fontWeight: "700",
+          mb: "10px"
         }}
       />
 
