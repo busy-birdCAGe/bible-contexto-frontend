@@ -10,10 +10,11 @@ import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 
 class GameState {
-  current: Guess
+  current?: Guess
   guesses: Guess[]
   guessCount: number
   wordFound: boolean
+  wordOfTheDay: string
 
   constructor() {
     let state = JSON.parse(localStorage.getItem("state") || "{}");
@@ -21,6 +22,7 @@ class GameState {
     this.guesses = state.guesses || [];
     this.guessCount = state.guessCount || 0;
     this.wordFound = state.wordFound || false;
+    this.wordOfTheDay = state.wordOfTheDay || "";
   }
 
   save() {
@@ -30,6 +32,7 @@ class GameState {
           guesses: this.guesses,
           guessCount: this.guessCount,
           wordFound: this.wordFound,
+          wordOfTheDay: this.wordOfTheDay
         })
       );
   }
@@ -39,7 +42,7 @@ const GamePage = () => {
   let gameState = new GameState();
   const [inputValue, setInputValue] = useState("");
   const gameId = 1; //hardcoded for now
-  const [current, setCurrent] = useState<Guess>(gameState.current);
+  const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
   const [guesses, setGuesses] = useState<Guess[]>(gameState.guesses);
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
   const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
@@ -53,6 +56,14 @@ const GamePage = () => {
   useEffect(() => {
     WOTDService.get().then((word) => {
       GuessService.init(word);
+      if (gameState.wordOfTheDay != word) {
+        setCurrent(undefined);
+        setGuesses([]);
+        setGuessCount(0);
+        setWordFound(false);
+        gameState.wordOfTheDay = word;
+        gameState.save()
+      }
     });
   }, []);
 
