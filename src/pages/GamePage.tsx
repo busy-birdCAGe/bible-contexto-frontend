@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
-import { stem } from "stemr";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 
@@ -25,14 +24,17 @@ const GamePage = () => {
     });
   }, []);
 
+  const normalize_word = (word: string) => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleGuess = () => {
     setErrorMessage("");
-    let stemmed_word = stem(inputValue);
-    console.log(stemmed_word);
+    let stemmed_word = GuessService.stem_word(inputValue);
     try {
       if (guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
         throw Error(errorMessages.guessing.duplicate);
@@ -40,7 +42,7 @@ const GamePage = () => {
       let score = GuessService.guess(stemmed_word);
       let currentGuess = {
         score,
-        word: inputValue,
+        word: normalize_word(inputValue),
         stemmed_word,
       };
 
