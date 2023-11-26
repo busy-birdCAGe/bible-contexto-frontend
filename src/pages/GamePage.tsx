@@ -9,13 +9,40 @@ import { errorMessages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 
+class GameState {
+  current: Guess
+  guesses: Guess[]
+  guessCount: number
+  wordFound: boolean
+
+  constructor() {
+    let state = JSON.parse(localStorage.getItem("state") || "{}");
+    this.current = state.current;
+    this.guesses = state.guesses || [];
+    this.guessCount = state.guessCount || 0;
+    this.wordFound = state.wordFound || false;
+  }
+
+  save() {
+      localStorage.setItem("state",
+        JSON.stringify({
+          current: this.current,
+          guesses: this.guesses,
+          guessCount: this.guessCount,
+          wordFound: this.wordFound,
+        })
+      );
+  }
+}
+
 const GamePage = () => {
+  let gameState = new GameState();
   const [inputValue, setInputValue] = useState("");
   const gameId = 1; //hardcoded for now
-  const [current, setCurrent] = useState<Guess>();
-  const [guesses, setGuesses] = useState<Guess[]>([]);
-  const [guessCount, setGuessCount] = useState<number>(0);
-  const [wordFound, setWordFound] = useState<boolean>(false);
+  const [current, setCurrent] = useState<Guess>(gameState.current);
+  const [guesses, setGuesses] = useState<Guess[]>(gameState.guesses);
+  const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
+  const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
@@ -47,17 +74,21 @@ const GamePage = () => {
       };
 
       setCurrent(currentGuess);
+      gameState.current = current;
       setGuesses((prevGuesses) => {
         let sortedGuesses = [...prevGuesses, currentGuess].sort(
           (a, b) => a.score - b.score
         );
         return sortedGuesses;
       });
+      gameState.guesses = guesses;
       if (!wordFound) {
         setGuessCount(guessCount + 1);
+        gameState.guessCount = guessCount;
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
+        gameState.wordFound = wordFound;
       }
       setInputValue("");
     } catch (error: any) {
@@ -66,6 +97,7 @@ const GamePage = () => {
         setInputValue("");
       }
     }
+    gameState.save();
   };
 
   return (
