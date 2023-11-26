@@ -44,6 +44,11 @@ const GamePage = () => {
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
   const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  gameState.current = current;
+  gameState.guesses = guesses;
+  gameState.guessCount = guessCount;
+  gameState.wordFound = wordFound;
+  gameState.save();
 
   useEffect(() => {
     WOTDService.get().then((word) => {
@@ -74,21 +79,17 @@ const GamePage = () => {
       };
 
       setCurrent(currentGuess);
-      gameState.current = current;
       setGuesses((prevGuesses) => {
         let sortedGuesses = [...prevGuesses, currentGuess].sort(
           (a, b) => a.score - b.score
         );
         return sortedGuesses;
       });
-      gameState.guesses = guesses;
       if (!wordFound) {
         setGuessCount(guessCount + 1);
-        gameState.guessCount = guessCount;
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
-        gameState.wordFound = wordFound;
       }
       setInputValue("");
     } catch (error: any) {
