@@ -16,7 +16,11 @@ export default new class GuessService {
   }
 
   stem_word(word: string): string {
-    return stem(word.toLowerCase());
+    const hardMapping: Record<string, string> = {
+      jesus: "jesu"
+    }
+    let lower: string = word.toLowerCase();
+    return hardMapping[lower] || stem(lower);
   }
 
   guess(word: string): number {
