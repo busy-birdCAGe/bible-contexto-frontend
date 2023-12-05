@@ -41,7 +41,6 @@ class GameState {
 const GamePage = () => {
   let gameState = new GameState();
   const [inputValue, setInputValue] = useState("");
-  const gameId = 1; //hardcoded for now
   const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
   const [guesses, setGuesses] = useState<Guess[]>(gameState.guesses);
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
@@ -124,11 +123,10 @@ const GamePage = () => {
       <Title title="Bible Contexto" />
 
       {wordFound && (
-        <CongratsSection gameId={gameId} numberOfAttempts={guessCount} />
+        <CongratsSection numberOfAttempts={guessCount} />
       )}
       {/* <Box component="form" onSubmit={handleSubmit}> */}
       <Box sx={{ display: "flex", width: "100%" }}>
-        <GameInfoHeader title={"Game:"} count={1} />
         <GameInfoHeader title={"Guesses:"} count={guessCount} />
       </Box>
       <GuessInput
