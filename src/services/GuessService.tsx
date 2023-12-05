@@ -1,5 +1,6 @@
 import { BACKEND_BUCKET } from "../env";
 import { errorMessages } from "../constants";
+import { stem } from "stemr";
 
 export default new class GuessService {
 
@@ -12,6 +13,14 @@ export default new class GuessService {
     }
     let word_list_string = await response.text();
     this.word_list = word_list_string.split(",");
+  }
+
+  stem_word(word: string): string {
+    const hardMapping: Record<string, string> = {
+      jesus: "jesu"
+    }
+    let lower: string = word.toLowerCase();
+    return hardMapping[lower] || stem(lower);
   }
 
   guess(word: string): number {
