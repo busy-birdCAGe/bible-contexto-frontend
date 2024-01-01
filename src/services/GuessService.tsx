@@ -16,11 +16,8 @@ export default new class GuessService {
   }
 
   stem_word(word: string): string {
-    const hardMapping: Record<string, string> = {
-      jesus: "jesu"
-    }
     let lower: string = word.toLowerCase();
-    return hardMapping[lower] || stem(lower);
+    return stem(lower);
   }
 
   guess(word: string): number {
@@ -28,6 +25,9 @@ export default new class GuessService {
         throw Error(errorMessages.guessing.noData)
     }
     let index = this.word_list.indexOf(word);
+    if (index == -1 && word.endsWith("s")) {
+      index = this.word_list.indexOf(word.slice(0, -1));
+    }
     if (index == -1) {
         throw Error(errorMessages.guessing.unknown)
     }
