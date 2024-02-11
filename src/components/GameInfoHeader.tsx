@@ -13,7 +13,6 @@ const GameInfoHeader = ({ title, count }: GameInfoHeaderProps) => {
         textAlign: "left",
         fontWeight: "700",
         ml: "10px",
-        // mb: "10px",
         fontSize: 16,
         display: "flex",
         alignItems: "center",

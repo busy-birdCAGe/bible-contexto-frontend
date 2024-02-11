@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box/Box";
+import { BsInfoSquare } from "react-icons/bs";
 import Guesses, { Guess } from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
@@ -8,13 +9,14 @@ import GuessService from "../services/GuessService";
 import { errorMessages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
+import HelpSection from "../components/HelpSection";
 
 class GameState {
-  current?: Guess
-  guesses: Guess[]
-  guessCount: number
-  wordFound: boolean
-  wordOfTheDay: string
+  current?: Guess;
+  guesses: Guess[];
+  guessCount: number;
+  wordFound: boolean;
+  wordOfTheDay: string;
 
   constructor() {
     let state = JSON.parse(localStorage.getItem("state") || "{}");
@@ -26,15 +28,16 @@ class GameState {
   }
 
   save() {
-      localStorage.setItem("state",
-        JSON.stringify({
-          current: this.current,
-          guesses: this.guesses,
-          guessCount: this.guessCount,
-          wordFound: this.wordFound,
-          wordOfTheDay: this.wordOfTheDay
-        })
-      );
+    localStorage.setItem(
+      "state",
+      JSON.stringify({
+        current: this.current,
+        guesses: this.guesses,
+        guessCount: this.guessCount,
+        wordFound: this.wordFound,
+        wordOfTheDay: this.wordOfTheDay,
+      })
+    );
   }
 }
 
@@ -46,6 +49,7 @@ const GamePage = () => {
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
   const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [helpVisible, setHelpVisible] = useState<boolean>(false);
   gameState.current = current;
   gameState.guesses = guesses;
   gameState.guessCount = guessCount;
@@ -61,14 +65,14 @@ const GamePage = () => {
         setGuessCount(0);
         setWordFound(false);
         gameState.wordOfTheDay = word;
-        gameState.save()
+        gameState.save();
       }
     });
   }, []);
 
   const normalize_word = (word: string) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
-  }
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -111,6 +115,10 @@ const GamePage = () => {
     gameState.save();
   };
 
+  const showHelp = () => {
+    setHelpVisible(true);
+  };
+
   return (
     <Box
       sx={{
@@ -122,12 +130,15 @@ const GamePage = () => {
     >
       <Title title="Bible Contexto" />
 
-      {wordFound && (
-        <CongratsSection numberOfAttempts={guessCount} />
-      )}
-      {/* <Box component="form" onSubmit={handleSubmit}> */}
+      <HelpSection visible={helpVisible} setVisibility={setHelpVisible}/>
+
+      {wordFound && <CongratsSection numberOfAttempts={guessCount} />}
       <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Guesses:"} count={guessCount} />
+        <BsInfoSquare
+          onClick={showHelp}
+          style={{ color: "white", fontSize: "1.5em", margin: "auto 0.5rem" }}
+        />
       </Box>
       <GuessInput
         guess={inputValue}
@@ -135,7 +146,6 @@ const GamePage = () => {
         handleSubmit={handleGuess}
       />
       <GameInfoHeader title={errorMessage} />
-      {/* </Box> */}
       <Guesses guesses={current ? [current] : []} currentGuess={current} />
       <br></br>
       <Guesses guesses={guesses} currentGuess={current} />
