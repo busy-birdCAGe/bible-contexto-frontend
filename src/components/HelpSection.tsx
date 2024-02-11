@@ -29,7 +29,7 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
         style={{ color: "white", fontSize: "1.5em", alignItems: "end" }}
       />
       <Title title="How To Play" />
-      <Box sx={{ color: "white", justifyItems: "left" }}>Help</Box>
+      <Box sx={{ color: "white", justifyItems: "left" }}>Every day a random word is chosen out of the NIV bible, and your goal is to guess it. Each of your guesses will be ranked against the word of the day by how often the word appears in similar contexts.</Box>
     </Box>
   );
 };
