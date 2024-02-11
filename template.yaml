@@ -3,19 +3,16 @@ Transform: AWS::Serverless-2016-10-31
 Description: Frontend for Bible Contexto
 
 Parameters:
-  env:
+  BucketName:
     Type: String
-    Default: dev
-    AllowedValues:
-      - dev
-      - prod
+    Default: dev-biblecontexto.com
 
 Resources:
 
   FrontEndBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${env}-bible-contexto-frontend"
+      BucketName: !Ref BucketName
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
