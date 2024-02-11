@@ -38,7 +38,7 @@ jobs:
       - name: Sam Build
         run: sam build --template-file "template.yaml" --use-container
       - name: Sam Deploy
-        run: sam deploy --template-file "template.yaml" --stack-name "dev-bible-contexto-frontend" --parameter-overrides "env=dev" --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3 --region "us-east-1" --capabilities "CAPABILITY_IAM"
+        run: sam deploy --template-file "template.yaml" --stack-name "dev-bible-contexto-frontend" --parameter-overrides "BucketName=dev.biblecontexto.com" --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3 --region "us-east-1" --capabilities "CAPABILITY_IAM"
       - name:  Upload Build To S3
         run: |
-          aws s3 cp dist s3://dev-bible-contexto-frontend --recursive
+          aws s3 cp dist s3://dev.biblecontexto.com --recursive
