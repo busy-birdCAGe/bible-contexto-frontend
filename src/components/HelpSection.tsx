@@ -18,19 +18,32 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
         mt: "50px",
         backgroundColor: "rgb(50,50,50)",
         position: "absolute",
-        display: visible ? "block" : "none",
+        display: visible ? "flex" : "none",
+        flexDirection: "column",
         zIndex: "1",
-        padding: "1rem 2.5rem",
-        borderRadius: "1rem",
+        justifyItems: "center",
+        border: "1px solid white ",
+        borderRadius: "10px",
+        width: "355px",
+        fontFamily: "monospace",
+        fontWeight: "500",
+        fontSize: 18
       }}
     >
-      <IoClose
-        onClick={hideHelp}
-        style={{ color: "white", fontSize: "1.5em", alignItems: "end" }}
-      />
-      <Title title="How To Play" />
-      <Box sx={{ color: "white", justifyItems: "left" }}>Every day a random word is chosen out of the NIV bible, and your goal is to guess it. Each of your guesses will be ranked against the word of the day by how often the word appears in similar contexts.</Box>
-    </Box>
+      <Box sx={{marginLeft: "auto", pr: "10px", pt: "10px", lineHeight: ".5"}}
+>
+        <IoClose
+          onClick={hideHelp}
+          style={{ color: "white", fontSize: "1.5em", marginRight: "auto", width: "100%"}}
+        />
+      </Box>
+      <Box sx = {{px: "15px", pb:"10px"}}>
+        <Title title="How To Play:" size={24} />
+        <Box sx={{ color: "white", textAlign: "left", my: "8px"  }}>Every day a random word is chosen out of the NIV bible, and your goal is to guess it.</Box>
+        <Box sx={{ color: "white", textAlign: "left"  }}>Each of your guesses will be ranked against the word of the day by how often the word appears in similar contexts.</Box>
+      </Box>
+    
+      </Box>
   );
 };
 
