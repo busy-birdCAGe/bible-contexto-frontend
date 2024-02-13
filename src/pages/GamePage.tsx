@@ -92,6 +92,7 @@ const GamePage = () => {
         stemmed_word,
       };
 
+
       setCurrent(currentGuess);
       setGuesses((prevGuesses) => {
         let sortedGuesses = [...prevGuesses, currentGuess].sort(
@@ -100,7 +101,7 @@ const GamePage = () => {
         return sortedGuesses;
       });
       if (!wordFound) {
-        setGuessCount(guessCount + 1);
+        setGuessCount(guessCount + 1); 
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
@@ -108,7 +109,10 @@ const GamePage = () => {
       setInputValue("");
     } catch (error: any) {
       setErrorMessage(error.message);
-      if (error.message == errorMessages.guessing.duplicate) {
+      if(error.message.includes("already")) {
+        setErrorMessage(`${normalize_word(inputValue)} was already guessed`)
+      }
+      if (error.message.includes("used")) {
         setInputValue("");
       }
     }
@@ -145,6 +149,13 @@ const GamePage = () => {
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
+
+      {/* ToDo make space for error message so words dont get moved down*/}
+      {/* {errorMessage ? (
+        <GameInfoHeader title={errorMessage} />
+      ) : (
+        <Guesses guesses={current ? [current] : []} currentGuess={current} />
+      )} */}
       <GameInfoHeader title={errorMessage} />
       <Guesses guesses={current ? [current] : []} currentGuess={current} />
       <br></br>

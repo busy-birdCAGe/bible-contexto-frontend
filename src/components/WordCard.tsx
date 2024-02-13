@@ -11,11 +11,11 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
   let percentage: number = 100 * 1.001 * Math.pow(0.9989, score);
 
   if (score <= 300) {
-    color = "5, 255";
+    color = "0, 206, 209 ";
   } else if (score <= 1000) {
-    color = "255, 245";
+    color = "255, 20, 147";
   } else {
-    color = "255, 0";
+    color = "153, 50, 204";
   }
 
   return (
@@ -23,8 +23,10 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
       sx={{
         width: "355px",
         height: "38px",
-        bgcolor: "rgba(60, 59, 59, 1)",
-        backgroundImage: `linear-gradient(to right, rgba(${color}, 0, 1) 2.5%, rgba(${color}, 0, 0.8) 2.5% ${percentage}%, rgba(60, 59, 59, 1) ${percentage}%)`,
+        // bgcolor: "rgba(60, 59, 59, 1)",
+        // bgcolor: "rgba(21, 32, 43, 1)",
+        // rgba(30, 42, 51, 1) nice background with the #15202b
+        backgroundImage: `linear-gradient(to right, rgba(${color}, 1) 2.5%, rgba(${color}, .9) 2.5% ${percentage}%, rgba(60, 59, 59, 1) ${percentage}%)`,
         borderRadius: "8px",
         overflow: "hidden",
         display: "flex",
@@ -39,9 +41,9 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
       <Box
         sx={{
           display: "flex",
-          width: "235px",
+          width: "270px",
           justifyContent: "left",
-          ml: "40px",
+          ml: "10px",
           fontWeight: "700",
         }}
       >
@@ -50,7 +52,7 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
       <Box
         sx={{
           display: "flex",
-          width: "121px",
+          width: "86px",
           justifyContent: "center",
         }}
       >
