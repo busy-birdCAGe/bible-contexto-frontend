@@ -43,7 +43,7 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
           display: "flex",
           width: "270px",
           justifyContent: "left",
-          ml: "10px",
+          ml: "20px",
           fontWeight: "700",
         }}
       >
