@@ -7,6 +7,7 @@ function App() {
         display: "flex",
         justifyContent: "center",
         textAlign: "center",
+        // bgcolor: "#1D242E",
         bgcolor: "#000000",
         minHeight: "100vh",
         maxHeight: "100vh",
