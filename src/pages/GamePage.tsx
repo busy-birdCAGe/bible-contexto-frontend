@@ -130,26 +130,27 @@ const GamePage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        // width: "355px",
       }}
     >
       <Title title="Bible Contexto" />
-
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible}/>
-
       {wordFound && <CongratsSection numberOfAttempts={guessCount} />}
       <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Guesses:"} count={guessCount} />
-        <BsInfoSquare
-          onClick={showHelp}
-          style={{ color: "white", fontSize: "1.5em", margin: "auto 0.5rem" }}
-        />
+        <Box sx={{ display: "flex", marginLeft: "auto"}}>
+          <BsInfoSquare
+            onClick={showHelp}
+            style={{ color: "white", fontSize: "1.5em", margin: "auto 0.5rem" }}
+            />
+        </Box>
+        
       </Box>
       <GuessInput
         guess={inputValue}
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
-
       {/* ToDo make space for error message so words dont get moved down*/}
       {/* {errorMessage ? (
         <GameInfoHeader title={errorMessage} />
