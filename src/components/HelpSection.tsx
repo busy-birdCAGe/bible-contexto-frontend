@@ -15,34 +15,43 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
   return (
     <Box
       sx={{
-        mt: "50px",
-        backgroundColor: "rgb(50,50,50)",
         position: "absolute",
-        display: visible ? "flex" : "none",
-        flexDirection: "column",
-        zIndex: "1",
-        justifyItems: "center",
+        mt: "150px",
         border: "1px solid white ",
-        borderRadius: "10px",
-        width: "355px",
-        fontWeight: "500",
-        fontSize: 18
+        // top: "45%",
+        // left: "50%",
+        // transform: "translate(-50%, -50%)",
+        backgroundColor: "rgb(50, 50, 50)",
+        borderRadius: "12px",
+        width: "80%",
+        maxWidth: "400px",
+        padding: "20px",
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.8)", // Increase opacity for better visibility
+        zIndex: 1,
+        color: "white",
+        display: visible ? "block" : "none",
       }}
     >
-      <Box sx={{marginLeft: "auto", pr: "10px", pt: "10px", lineHeight: ".5"}}
->
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "10px",
+        }}
+      >
         <IoClose
           onClick={hideHelp}
-          style={{ color: "white", fontSize: "1.5em", marginRight: "auto", width: "100%"}}
+          style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
         />
       </Box>
-      <Box sx = {{px: "15px", pb:"10px"}}>
-        <Title title="How To Play:" size={24} />
-        <Box sx={{ color: "white", textAlign: "left", my: "8px"  }}>Every day a random word is chosen out of the NIV bible, and your goal is to guess it.</Box>
-        <Box sx={{ color: "white", textAlign: "left"  }}>Each of your guesses will be ranked against the word of the day by how often the word appears in similar contexts.</Box>
+      <Title title="How To Play:" size={24} />
+      <Box sx={{ textAlign: "left", my: "12px" }}>
+        Every day a random word is chosen out of the NIV Bible, and your goal is to guess it.
       </Box>
-    
+      <Box sx={{ textAlign: "left", marginBottom: "20px" }}>
+        Each of your guesses will be ranked against the word of the day by how often the word appears in similar contexts.
       </Box>
+    </Box>
   );
 };
 
