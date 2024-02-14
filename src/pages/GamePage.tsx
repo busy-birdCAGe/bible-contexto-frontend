@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box/Box";
-import { BsInfoSquare } from "react-icons/bs";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 import Guesses, { Guess } from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
@@ -135,11 +135,12 @@ const GamePage = () => {
     >
       <Title title="Bible Contexto" />
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible}/>
+      {/* <CongratsSection/> */}
       {wordFound && <CongratsSection numberOfAttempts={guessCount} />}
       <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Guesses:"} count={guessCount} />
         <Box sx={{ display: "flex", marginLeft: "auto"}}>
-          <BsInfoSquare
+          <IoMdInformationCircleOutline
             onClick={showHelp}
             style={{ color: "white", fontSize: "1.5em", margin: "auto 0.5rem" }}
             />
