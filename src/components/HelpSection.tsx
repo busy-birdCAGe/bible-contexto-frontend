@@ -21,7 +21,7 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
         // top: "45%",
         // left: "50%",
         // transform: "translate(-50%, -50%)",
-        backgroundColor: "rgb(50, 50, 50)",
+        backgroundColor: "rgb(34, 34, 34, 1)",
         borderRadius: "12px",
         width: "80%",
         maxWidth: "400px",

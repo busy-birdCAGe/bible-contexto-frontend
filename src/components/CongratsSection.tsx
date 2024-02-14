@@ -42,52 +42,63 @@ const emojisType2 = Array.from({ length: Math.min(guessesType2, emojiThresholdTy
 const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdType3) }, () => "🟥");
   return (
     <Box
+    sx={{
+      width: "300px",
+      minHeight: "260px",
+      bgcolor: "rgba(34, 34, 34, 1)",
+      textAlign: "center",
+      color: "white",
+      border: "1px solid white",
+      borderRadius: "12px",
+      my: "15px",
+      padding: "20px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Box
       sx={{
-        width: "300px",
-        minHeight: "260px",
-        bgcolor: "rgba(34, 34, 34, 1)",
-        textAlign: "center",
-        color: "white",
-        border: "1px solid white",
-        borderRadius: "12px",
-        my: "15px",
-        padding: "20px",
+        fontSize: "28px", 
+        fontWeight: "700",
+        marginBottom: "10px", 
+      }}
+    >
+      Congrats!
+    </Box>
+  
+    <Box
+      sx={{
+        fontSize: "18px", 
+        fontWeight: "500",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        textAlign: "left",
+        mb: "15px",
       }}
     >
-      {/* <Title title="Congrats!" size={24}/> */}
-      <Box
-        sx={{
-          fontSize: 30,
-          fontWeight: "700",
-          marginBottom: "10px",
-        }}
-      >
-        Congrats!
+      <Box sx={{textAlign: "center" }}>
+        You got the word in
       </Box>
-
-      <Box sx={{ fontSize: 20, fontWeight: "700", display: "flex", flexDirection: "column", alignItems: "center",
-        justifyContent: "center", }}>
-        <Box sx={{mb:"10px"}}>
-          You got the word in {totalGuesses} guesses!
+      <Box sx={{ mb: "10px", textAlign: "center" }}>
+        {totalGuesses} guesses!
+      </Box>
+      <Box>
+        <Box>
+          {emojisType1} {guessesType1}
         </Box>
-        <Box sx={{textAlign: "left"}}>
-          <Box>
-            {emojisType1} {guessesType1}
-          </Box>
-          <Box>
-            {emojisType2} {guessesType2}
-          </Box>
-          <Box>
-            {emojisType3} {guessesType3}
-          </Box>
+        <Box>
+          {emojisType2} {guessesType2}
         </Box>
-        
+        <Box>
+          {emojisType3} {guessesType3}
+        </Box>
       </Box>
     </Box>
+  </Box>
   );
 };
 
