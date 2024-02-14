@@ -25,7 +25,7 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
         border: "1px solid white ",
         borderRadius: "10px",
         width: "355px",
-        fontFamily: "monospace",
+        // fontFamily: "monospace",
         fontWeight: "500",
         fontSize: 18
       }}
