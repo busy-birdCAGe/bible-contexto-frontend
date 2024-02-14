@@ -14,9 +14,9 @@ type CalculateRoundedPercentageThreshold = (
 ) => number;
 
 const CongratsSection = ({
-  guessesType1 = 5,
-  guessesType2 = 8,
-  guessesType3 = 15,
+  guessesType1 = 0,
+  guessesType2 = 0,
+  guessesType3 = 0,
 }: CongratsSectionProps) => {
 
 const totalGuesses = guessesType1 + guessesType2 + guessesType3;
@@ -45,6 +45,7 @@ const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdTy
     sx={{
       width: "300px",
       minHeight: "260px",
+
       bgcolor: "rgba(34, 34, 34, 1)",
       textAlign: "center",
       color: "white",

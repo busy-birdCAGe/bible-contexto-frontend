@@ -47,6 +47,11 @@ const GamePage = () => {
   const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
   const [guesses, setGuesses] = useState<Guess[]>(gameState.guesses);
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
+  const [greenCount, setGreenCount] = useState<number>(0);
+  const [yellowCount, setYellowCount] = useState<number>(0);
+  const [redCount, setRedCount] = useState<number>(0);
+
+
   const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
@@ -102,6 +107,13 @@ const GamePage = () => {
       });
       if (!wordFound) {
         setGuessCount(guessCount + 1); 
+        if (score <= 300) {
+          setGreenCount(greenCount+1)
+        } else if (score <= 1000) {
+          setYellowCount(yellowCount+1)
+        } else {
+          setRedCount(redCount+1)
+        }
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
@@ -135,8 +147,8 @@ const GamePage = () => {
     >
       <Title title="Bible Contexto" />
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible}/>
-      {/* <CongratsSection/> */}
-      {wordFound && <CongratsSection numberOfAttempts={guessCount} />}
+
+      {wordFound && <CongratsSection guessesType1={greenCount} guessesType2={yellowCount} guessesType3={redCount}/>}
       <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Guesses:"} count={guessCount} />
         <Box sx={{ display: "flex", marginLeft: "auto"}}>
