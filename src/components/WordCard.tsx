@@ -32,7 +32,6 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
         display: "flex",
         alignItems: "center",
         fontSize: 18,
-        // fontFamily: "monospace",
         mt: "6px",
         color: "white",
         border: highlighted ? "2px solid white ": "",

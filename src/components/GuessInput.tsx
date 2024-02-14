@@ -28,7 +28,6 @@ const GuessInput = ({guess, handleChange, handleSubmit}: GuessInputProps) => {
           height: "50px",
           bgcolor: "rgba(217, 217, 217, 1)",
           borderRadius: "10px",
-          // fontFamily: "monospace",
           fontSize: 24,
           fontWeight: "700",
           mb: "10px"

@@ -10,7 +10,6 @@ const Title = ({ title, size = 32 }: TitleProps) => {
       sx={{
         color: "white",
         textAlign: "center",
-        // fontFamily: "monospace",
         fontSize: size,
         fontWeight: "700",
         letterSpacing: ".1px",
