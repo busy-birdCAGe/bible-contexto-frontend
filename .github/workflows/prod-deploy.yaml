@@ -44,4 +44,4 @@ jobs:
           aws s3 cp dist s3://biblecontexto.com --recursive
       - name: Reset Cloudfront Cache
         run: |
-          aws cloudfront create-invalidation --distribution-id E2G04YHQE8CUFO --paths /*
+          aws cloudfront create-invalidation --distribution-id E2G04YHQE8CUFO --paths "/*"
