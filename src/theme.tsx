@@ -17,6 +17,19 @@ const theme = createTheme({
       'sans-serif',
     ].join(','),
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          overscrollBehaviorY: 'none',
+          height: '100%',
+          margin: 0,
+          padding: 0,
+        },
+      },
+    },
+  },
+  
   
 });
 
