@@ -21,7 +21,8 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
   return (
     <Box
       sx={{
-        width: "355px",
+        // width: "355px",    
+        width: "100%",
         height: "38px",
         // bgcolor: "rgba(60, 59, 59, 1)",
         // bgcolor: "rgba(21, 32, 43, 1)",
@@ -30,6 +31,7 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
         borderRadius: "8px",
         overflow: "hidden",
         display: "flex",
+        justifyContent: "space-between",
         alignItems: "center",
         fontSize: 18,
         mt: "6px",
@@ -39,9 +41,6 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
     >
       <Box
         sx={{
-          display: "flex",
-          width: "270px",
-          justifyContent: "left",
           ml: "20px",
           fontWeight: "700",
         }}
@@ -50,9 +49,9 @@ const WordCard = ({ score, word, highlighted }: WordCardProps) => {
       </Box>
       <Box
         sx={{
-          display: "flex",
-          width: "86px",
-          justifyContent: "center",
+
+          mr: "20px",
+          textAlign: "right"
         }}
       >
         {score}

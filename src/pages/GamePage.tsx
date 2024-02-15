@@ -132,17 +132,19 @@ const GamePage = () => {
   };
 
   const showHelp = () => {
-    setHelpVisible(true);
+    setHelpVisible(!helpVisible);
   };
 
   return (
     <Box
       sx={{
         mt: "20px",
+        mx: "17px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        // width: "355px",
+        width: "100%",
+        maxWidth: "400px",
       }}
     >
       <Title title="Bible Contexto" />

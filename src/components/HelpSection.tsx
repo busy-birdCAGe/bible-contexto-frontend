@@ -2,7 +2,7 @@ import Box from "@mui/material/Box/Box";
 import Title from "../components/Title";
 import { Dispatch, SetStateAction } from "react";
 import { IoClose } from "react-icons/io5";
-import { Typography } from "@mui/material";
+
 
 interface HelpSectionProps {
   setVisibility: Dispatch<SetStateAction<boolean>>;
@@ -17,7 +17,7 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
     <Box
       sx={{
         position: "absolute",
-        mt: "150px",
+        mt: "140px",
         border: "1px solid white ",
         // top: "45%",
         // left: "50%",
@@ -25,7 +25,7 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
         backgroundColor: "rgb(34, 34, 34, 1)",
         borderRadius: "12px",
         width: "80%",
-        maxWidth: "400px",
+        maxWidth: "355px",
         padding: "20px",
         boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.8)", // Increase opacity for better visibility
         zIndex: 1,
