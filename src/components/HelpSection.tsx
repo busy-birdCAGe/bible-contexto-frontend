@@ -2,6 +2,7 @@ import Box from "@mui/material/Box/Box";
 import Title from "../components/Title";
 import { Dispatch, SetStateAction } from "react";
 import { IoClose } from "react-icons/io5";
+import { Typography } from "@mui/material";
 
 interface HelpSectionProps {
   setVisibility: Dispatch<SetStateAction<boolean>>;
@@ -44,24 +45,19 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
           style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
         />
       </Box>
-      <Box sx={{ px: "15px", pb: "10px" }}>
-        <Title title="How To Play:" size={24} />
-        <Box sx={{ color: "white", textAlign: "left", my: "8px" }}>
-          Every day a random word is chosen out of the NIV bible, and your goal
-          is to guess it.
-        </Box>
-        <Box sx={{ color: "white", textAlign: "left", my: "8px" }}>
-          Each of your guesses will be scored against the word of the day by how
-          often the word appears in similar contexts.
-        </Box>
-        <Box sx={{ color: "white", textAlign: "left" }}>
+      <Title title="How To Play:" size={24} />
+      <Box sx={{ textAlign: "left", my: "12px", fontSize: "15px"}}>
+        Every day a random word is chosen out of the NIV Bible, and your goal is to guess it.
+      </Box>
+      <Box sx={{ textAlign: "left", marginBottom: "12px", fontSize: "15px" }}>
+        Each of your guesses will be ranked against the word of the day by how often the word appears in similar contexts.
+      </Box>
+      <Box sx={{ color: "white", textAlign: "left", marginBottom: "20px", fontSize: "15px" }}>
           Words with lower scores are closer to the word of the day, which has a
           score of 1.
-        </Box>
       </Box>
-  
-    
-      </Box>
+      
+    </Box>
   );
 };
 
