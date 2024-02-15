@@ -15,6 +15,9 @@ class GameState {
   current?: Guess;
   guesses: Guess[];
   guessCount: number;
+  greenCount: number;
+  yellowCount: number;
+  redCount: number;
   wordFound: boolean;
   wordOfTheDay: string;
 
@@ -23,6 +26,9 @@ class GameState {
     this.current = state.current;
     this.guesses = state.guesses || [];
     this.guessCount = state.guessCount || 0;
+    this.greenCount = state.greenCount || 0;
+    this.yellowCount = state.yellowCount || 0;
+    this.redCount = state.redCount || 0;
     this.wordFound = state.wordFound || false;
     this.wordOfTheDay = state.wordOfTheDay || "";
   }
@@ -34,6 +40,9 @@ class GameState {
         current: this.current,
         guesses: this.guesses,
         guessCount: this.guessCount,
+        greenCount: this.greenCount,
+        yellowCount: this.yellowCount,
+        redCount: this.redCount,
         wordFound: this.wordFound,
         wordOfTheDay: this.wordOfTheDay,
       })
@@ -47,9 +56,9 @@ const GamePage = () => {
   const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
   const [guesses, setGuesses] = useState<Guess[]>(gameState.guesses);
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
-  const [greenCount, setGreenCount] = useState<number>(0);
-  const [yellowCount, setYellowCount] = useState<number>(0);
-  const [redCount, setRedCount] = useState<number>(0);
+  const [greenCount, setGreenCount] = useState<number>(gameState.greenCount);
+  const [yellowCount, setYellowCount] = useState<number>(gameState.yellowCount);
+  const [redCount, setRedCount] = useState<number>(gameState.redCount);
 
 
   const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
@@ -58,6 +67,9 @@ const GamePage = () => {
   gameState.current = current;
   gameState.guesses = guesses;
   gameState.guessCount = guessCount;
+  gameState.greenCount = greenCount;
+  gameState.yellowCount = yellowCount;
+  gameState.redCount = redCount;
   gameState.wordFound = wordFound;
   gameState.save();
 
