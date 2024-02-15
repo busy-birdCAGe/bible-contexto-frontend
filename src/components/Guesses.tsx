@@ -13,7 +13,7 @@ interface GuessesProps {
 
 const Guesses = ({ guesses, currentGuess }: GuessesProps) => {
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent:"center", width: "100%"}}>
       {guesses.map((guess: Guess) => (
         <WordCard
           score={guess.score}
