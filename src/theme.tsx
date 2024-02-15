@@ -21,7 +21,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          position: 'fixed',
+          // position: 'fixed',
           // overscrollBehaviorY: 'none',
           width: '100%',
           height: '100%',
@@ -31,7 +31,11 @@ const theme = createTheme({
       },
     },
   },
-  
+  palette: {
+    background: {
+      default: '#000000', // Replace with your desired background color
+    },
+  },
   
 });
 
