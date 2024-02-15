@@ -21,7 +21,9 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          overscrollBehaviorY: 'none',
+          position: 'fixed',
+          // overscrollBehaviorY: 'none',
+          width: '100%',
           height: '100%',
           margin: 0,
           padding: 0,
