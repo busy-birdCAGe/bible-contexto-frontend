@@ -24,11 +24,12 @@ const GuessInput = ({guess, handleChange, handleSubmit}: GuessInputProps) => {
         onKeyDown={handleKeyPress}
         sx={{
           pl: "10px",
-          width: "355px",
+          // width: "355px",
+
+          width: "100%",
           height: "50px",
           bgcolor: "rgba(217, 217, 217, 1)",
           borderRadius: "10px",
-          fontFamily: "monospace",
           fontSize: 24,
           fontWeight: "700",
           mb: "10px"

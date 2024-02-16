@@ -9,11 +9,9 @@ const GameInfoHeader = ({ title, count }: GameInfoHeaderProps) => {
     <Box
       sx={{
         color: "white",
-        fontFamily: "monospace",
         textAlign: "left",
         fontWeight: "700",
-        ml: "10px",
-        // mb: "10px",
+        mx: "15px",
         fontSize: 16,
         display: "flex",
         alignItems: "center",
