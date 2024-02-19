@@ -11,13 +11,18 @@ import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
 
+
+export interface colorCounts {
+  greenCount: number;
+  yellowCount: number;
+  redCount: number;
+}
+
 class GameState {
   current?: Guess;
   guesses: Guess[];
   guessCount: number;
-  greenCount: number;
-  yellowCount: number;
-  redCount: number;
+  colorCounts: colorCounts;
   wordFound: boolean;
   wordOfTheDay: string;
 
@@ -26,9 +31,7 @@ class GameState {
     this.current = state.current;
     this.guesses = state.guesses || [];
     this.guessCount = state.guessCount || 0;
-    this.greenCount = state.greenCount || 0;
-    this.yellowCount = state.yellowCount || 0;
-    this.redCount = state.redCount || 0;
+    this.colorCounts = { ...state.colorCounts } || { greenCount: 0, yellowCount: 0, redCount: 0 };
     this.wordFound = state.wordFound || false;
     this.wordOfTheDay = state.wordOfTheDay || "";
   }
@@ -40,9 +43,7 @@ class GameState {
         current: this.current,
         guesses: this.guesses,
         guessCount: this.guessCount,
-        greenCount: this.greenCount,
-        yellowCount: this.yellowCount,
-        redCount: this.redCount,
+        colorCounts: this.colorCounts,
         wordFound: this.wordFound,
         wordOfTheDay: this.wordOfTheDay,
       })
@@ -56,20 +57,14 @@ const GamePage = () => {
   const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
   const [guesses, setGuesses] = useState<Guess[]>(gameState.guesses);
   const [guessCount, setGuessCount] = useState<number>(gameState.guessCount);
-  const [greenCount, setGreenCount] = useState<number>(gameState.greenCount);
-  const [yellowCount, setYellowCount] = useState<number>(gameState.yellowCount);
-  const [redCount, setRedCount] = useState<number>(gameState.redCount);
-
-
+  const [colorCounts, setColorCounts] = useState<colorCounts>(gameState.colorCounts);
   const [wordFound, setWordFound] = useState<boolean>(gameState.wordFound);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   gameState.current = current;
   gameState.guesses = guesses;
   gameState.guessCount = guessCount;
-  gameState.greenCount = greenCount;
-  gameState.yellowCount = yellowCount;
-  gameState.redCount = redCount;
+  gameState.colorCounts = colorCounts;
   gameState.wordFound = wordFound;
   gameState.save();
 
@@ -80,12 +75,26 @@ const GamePage = () => {
         setCurrent(undefined);
         setGuesses([]);
         setGuessCount(0);
+        setColorCounts({greenCount: 0, yellowCount: 0, redCount: 0})
         setWordFound(false);
         gameState.wordOfTheDay = word;
         gameState.save();
       }
     });
   }, []);
+
+  useEffect(() => {
+
+    if(wordFound && (guessCount == guesses.length)) {
+      let greenCount = guesses.filter(obj => obj.score < 301).length;
+      let yellowCount = guesses.filter(obj => obj.score > 300 && obj.score < 1001).length;
+      let redCount = guesses.filter(obj => obj.score > 1000).length;
+      setColorCounts({greenCount, yellowCount, redCount});
+      gameState.save();
+    }
+    
+    
+  }, [wordFound]);
 
   const normalize_word = (word: string) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
@@ -119,13 +128,6 @@ const GamePage = () => {
       });
       if (!wordFound) {
         setGuessCount(guessCount + 1); 
-        if (score <= 300) {
-          setGreenCount(greenCount+1)
-        } else if (score <= 1000) {
-          setYellowCount(yellowCount+1)
-        } else {
-          setRedCount(redCount+1)
-        }
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
@@ -162,7 +164,7 @@ const GamePage = () => {
       <Title title="Bible Contexto" />
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible}/>
 
-      {wordFound && <CongratsSection guessesType1={greenCount} guessesType2={yellowCount} guessesType3={redCount}/>}
+      {wordFound && <CongratsSection guessesType1={gameState.colorCounts.greenCount} guessesType2={gameState.colorCounts.yellowCount} guessesType3={gameState.colorCounts.redCount}/>}
       <Box sx={{ display: "flex", width: "100%" }}>
         <GameInfoHeader title={"Guesses:"} count={guessCount} />
         <Box sx={{ display: "flex", marginLeft: "auto"}}>
