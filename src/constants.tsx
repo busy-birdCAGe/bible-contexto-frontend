@@ -8,3 +8,6 @@ export const errorMessages = {
         any: "Internal server error"
     }
 }
+
+export const guessServiceDataKey = "word_data";
+export const gameStateKey = "state";
