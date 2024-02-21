@@ -7,7 +7,7 @@ export default new class GuessService {
   word_list?: Array<string>;
 
   async init(word: string): Promise<void> {
-    const response = await fetch(`${BACKEND_BUCKET}/${word}`);
+    const response = await fetch(`${BACKEND_BUCKET}/english/${word}`);
     if (!response.ok) {
       throw new Error(errorMessages.backend.any);
     }
