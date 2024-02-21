@@ -33,7 +33,6 @@ export default new (class GuessService {
     let word_list_string = await response.text();
     this.word_list = word_list_string.split(",");
 
-    console.log(this.guess_words);
     if (!this.guess_words || this.cache_expiration < current_time) {
       response = await fetch(
         `${BACKEND_BUCKET}/english/guess_words.txt`
