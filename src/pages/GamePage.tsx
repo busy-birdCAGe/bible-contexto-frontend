@@ -6,7 +6,7 @@ import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
 import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
-import { errorMessages, gameStateKey } from "../constants";
+import { gameStateKey } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
