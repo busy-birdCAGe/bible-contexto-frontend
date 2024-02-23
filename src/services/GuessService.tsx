@@ -11,14 +11,13 @@ interface GuessServiceData {
 
 export default class GuessService {
   word?: string;
-  language: string;
+  language?: string;
   word_list?: Array<string>;
   guess_words?: Array<string>;
   stop_words?: Array<string>;
   cache_expiration: number;
 
-  constructor(language: string) {
-    this.language = language;
+  constructor() {
     let data: GuessServiceData = JSON.parse(
       localStorage.getItem(guessServiceDataKey) || "{}"
     );
@@ -27,7 +26,8 @@ export default class GuessService {
     this.cache_expiration = data.cache_expiration || 0;
   }
 
-  async init(): Promise<void> {
+  async init(language: string): Promise<void> {
+    this.language = language;
     const current_time = Math.floor(Date.now() / 1000);
 
     let response = await fetch(
@@ -36,7 +36,7 @@ export default class GuessService {
     if (!response.ok) {
       throw new Error(errorMessages.backend.any);
     }
-    this.word = await response.text()
+    this.word = await response.text();
 
     response = await fetch(`${BACKEND_BUCKET}/${this.language}/${this.word}`);
     if (!response.ok) {
@@ -111,7 +111,7 @@ export default class GuessService {
       JSON.stringify({
         guess_words: this.guess_words,
         stop_words: this.stop_words,
-        cache_expiration: this.cache_expiration
+        cache_expiration: this.cache_expiration,
       })
     );
   }

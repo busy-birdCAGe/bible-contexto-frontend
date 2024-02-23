@@ -53,9 +53,10 @@ class GameState {
   }
 }
 
+const guessService = new GuessService();
+
 const GamePage = () => {
-  let language = languages.english;
-  const guessService = new GuessService(language);
+  const language = languages.english;
   let gameState = new GameState();
   const [inputValue, setInputValue] = useState("");
   const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
@@ -75,7 +76,7 @@ const GamePage = () => {
   gameState.save();
 
   useEffect(() => {
-    guessService.init().then(() => {
+    guessService.init(language).then(() => {
       if (gameState.wordOfTheDay != guessService.word) {
         setCurrent(undefined);
         setGuesses([]);
