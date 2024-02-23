@@ -9,5 +9,9 @@ export const errorMessages = {
     }
 }
 
+export const languages = {
+    english: "english"
+}
+
 export const guessServiceDataKey = "word_data";
 export const gameStateKey = "state";

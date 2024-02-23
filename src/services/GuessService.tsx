@@ -9,13 +9,16 @@ interface GuessServiceData {
   cache_expiration: number;
 }
 
-export default new (class GuessService {
+export default class GuessService {
+  word?: string;
+  language: string;
   word_list?: Array<string>;
   guess_words?: Array<string>;
   stop_words?: Array<string>;
   cache_expiration: number;
 
-  constructor() {
+  constructor(language: string) {
+    this.language = language;
     let data: GuessServiceData = JSON.parse(
       localStorage.getItem(guessServiceDataKey) || "{}"
     );
@@ -24,10 +27,18 @@ export default new (class GuessService {
     this.cache_expiration = data.cache_expiration || 0;
   }
 
-  async init(word: string): Promise<void> {
+  async init(): Promise<void> {
     const current_time = Math.floor(Date.now() / 1000);
 
-    let response = await fetch(`${BACKEND_BUCKET}/english/${word}`);
+    let response = await fetch(
+      `${BACKEND_BUCKET}/${this.language}/key_of_the_day`
+    );
+    if (!response.ok) {
+      throw new Error(errorMessages.backend.any);
+    }
+    this.word = await response.text()
+
+    response = await fetch(`${BACKEND_BUCKET}/${this.language}/${this.word}`);
     if (!response.ok) {
       throw new Error(errorMessages.backend.any);
     }
@@ -36,7 +47,7 @@ export default new (class GuessService {
 
     if (!this.guess_words || this.cache_expiration < current_time) {
       response = await fetch(
-        `${BACKEND_BUCKET}/english/guess_words.txt`
+        `${BACKEND_BUCKET}/${this.language}/guess_words.txt`
       );
       if (!response.ok) {
         throw new Error(errorMessages.backend.any);
@@ -49,7 +60,7 @@ export default new (class GuessService {
 
     if (!this.stop_words || this.cache_expiration < current_time) {
       response = await fetch(
-        `${BACKEND_BUCKET}/english/stop_words.txt`
+        `${BACKEND_BUCKET}/${this.language}/stop_words.txt`
       );
       if (!response.ok) {
         throw new Error(errorMessages.backend.any);
@@ -104,4 +115,4 @@ export default new (class GuessService {
       })
     );
   }
-})();
+};

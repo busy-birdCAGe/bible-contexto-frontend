@@ -4,9 +4,8 @@ import Guesses, { Guess } from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import WOTDService from "../services/WordOfTheDayService";
 import GuessService from "../services/GuessService";
-import { gameStateKey } from "../constants";
+import { gameStateKey, languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
@@ -55,6 +54,8 @@ class GameState {
 }
 
 const GamePage = () => {
+  let language = languages.english;
+  const guessService = new GuessService(language);
   let gameState = new GameState();
   const [inputValue, setInputValue] = useState("");
   const [current, setCurrent] = useState<Guess | undefined>(gameState.current);
@@ -74,15 +75,14 @@ const GamePage = () => {
   gameState.save();
 
   useEffect(() => {
-    WOTDService.get().then((word) => {
-      GuessService.init(word);
-      if (gameState.wordOfTheDay != word) {
+    guessService.init().then(() => {
+      if (gameState.wordOfTheDay != guessService.word) {
         setCurrent(undefined);
         setGuesses([]);
         setGuessCount(0);
         setColorCounts({ greenCount: 0, yellowCount: 0, redCount: 0 });
         setWordFound(false);
-        gameState.wordOfTheDay = word;
+        gameState.wordOfTheDay = guessService.word!;
         gameState.save();
       }
     });
@@ -110,28 +110,28 @@ const GamePage = () => {
 
   const handleGuess = () => {
     setErrorMessage("");
-    let stemmed_word = GuessService.stem_word(inputValue);
+    let stemmed_word = guessService.stem_word(inputValue);
     try {
       if (guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
         setErrorMessage(`${normalize_word(inputValue)} was already guessed`);
         setInputValue("");
         return;
       }
-      if (GuessService.is_stop_word(inputValue)) {
+      if (guessService.is_stop_word(inputValue)) {
         setErrorMessage(
           `${normalize_word(inputValue)} is too common`
         );
         setInputValue("");
         return;
       }
-      if (!GuessService.is_word(inputValue)) {
+      if (!guessService.is_word(inputValue)) {
         setErrorMessage(
           `${normalize_word(inputValue)} is not in the NIV bible`
         );
         setInputValue("");
         return;
       }
-      let score = GuessService.guess(stemmed_word);
+      let score = guessService.guess(stemmed_word);
       let currentGuess = {
         score,
         word: normalize_word(inputValue),
