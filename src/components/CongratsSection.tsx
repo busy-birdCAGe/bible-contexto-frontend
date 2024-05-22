@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box/Box";
+import ShareButton from "./ShareButton";
 
 export interface CongratsSectionProps {
   numberOfAttempts?: number;
@@ -98,6 +99,7 @@ const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdTy
           {emojisType3} {guessesType3}
         </Box>
       </Box>
+      <ShareButton textToShare="hello there"/>
     </Box>
   </Box>
   );
