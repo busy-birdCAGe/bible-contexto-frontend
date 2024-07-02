@@ -1,4 +1,6 @@
 import Box from "@mui/material/Box/Box";
+import ShareScore from './ShareScore';
+
 
 export interface CongratsSectionProps {
   numberOfAttempts?: number;
@@ -99,6 +101,7 @@ const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdTy
         </Box>
       </Box>
     </Box>
+    <ShareScore grid={emojisType1}/>
   </Box>
   );
 };
