@@ -101,7 +101,7 @@ const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdTy
         </Box>
       </Box>
     </Box>
-    <ShareScore grid={emojisType1}/>
+    <ShareScore grid={emojisType1.join('') + {guessesType1} + "/n" + emojisType2.join('')+ {guessesType2} + "/n" + emojisType3.join('')+ {guessesType3}}/>
   </Box>
   );
 };
