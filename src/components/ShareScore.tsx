@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-
 const ShareScore = () => {
-  const [guesses, setGuesses] = useState(['CRANE', 'SHOUT', 'WORDS']);
-  const [solution, setSolution] = useState('WORDS');
+  const guesses = ['CRANE', 'SHOUT', 'WORDS'];
+  const solution = 'WORDS';
 
   const generateScoreGrid = (guesses: any[], solution: string | any[]) => {
     let grid = '';
