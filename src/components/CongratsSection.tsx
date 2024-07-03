@@ -1,4 +1,6 @@
 import Box from "@mui/material/Box/Box";
+import ShareScore from './ShareScore';
+
 
 export interface CongratsSectionProps {
   numberOfAttempts?: number;
@@ -40,6 +42,9 @@ const emojiThresholdType3 = calculateRoundedPercentageThreshold(guessesType3, to
 const emojisType1 = Array.from({ length: Math.min(guessesType1, emojiThresholdType1) }, () => "🟩");
 const emojisType2 = Array.from({ length: Math.min(guessesType2, emojiThresholdType2) }, () => "🟨");
 const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdType3) }, () => "🟥");
+
+const guessStats = emojisType1.join('') + guessesType1 + "\n" + emojisType2.join('')+ guessesType2 + "\n" + emojisType3.join('')+ guessesType3
+
   return (
     <Box
     sx={{
@@ -99,6 +104,7 @@ const emojisType3 = Array.from({ length: Math.min(guessesType3, emojiThresholdTy
         </Box>
       </Box>
     </Box>
+    <ShareScore guessStats={guessStats} guesses={totalGuesses}/>
   </Box>
   );
 };
