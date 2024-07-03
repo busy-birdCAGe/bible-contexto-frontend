@@ -1,32 +1,22 @@
-const ShareScore = (grid: any) => {
-//   const guesses = ['CRANE', 'SHOUT', 'WORDS'];
-//   const solution = 'WORDS';
+import { Button } from "@mui/material";
 
-//   const generateScoreGrid = (guesses: any[], solution: string | any[]) => {
-//     let grid = '';
-//     guesses.forEach((guess: string | any[]) => {
-//       let row = '';
-//       for (let i = 0; i < guess.length; i++) {
-//         if (guess[i] === solution[i]) {
-//           row += '🟩'; // Correct letter in the correct position
-//         } else if (solution.includes(guess[i])) {
-//           row += '🟨'; // Correct letter in the wrong position
-//         } else {
-//           row += '⬛'; // Incorrect letter
-//         }
-//       }
-//       grid += row + '\n';
-//     });
-//     return grid;
-//   };
+interface ShareScoreProps {
+  guessStats: string;
+  guesses: number;
+}
+
+const ShareScore = ({
+  guessStats,
+  guesses
+}: ShareScoreProps) => {
+
 
   const handleShare = () => {
-    // const scoreGrid = generateScoreGrid(guesses, solution);
 
     if (navigator.share) {
       navigator.share({
-        title: 'My Wordle Score',
-        text: `Check out my Bible Contexto Score:\n${grid}`,
+        title: 'My Bible Contexto Score',
+        text: `I guessed the word in ${guesses} guesses:\n${guessStats}`,
         url: window.location.href
       }).then(() => {
         console.log('Score shared successfully');
@@ -35,7 +25,7 @@ const ShareScore = (grid: any) => {
       });
     } else {
       // Fallback for browsers that do not support the Web Share API
-      navigator.clipboard.writeText(`Check out my Wordle score:\n${grid}`).then(() => {
+      navigator.clipboard.writeText(`I guessed the word in ${guesses} guesses:\n${guessStats}`).then(() => {
         alert('Score copied to clipboard!');
       }).catch(err => {
         console.error('Failed to copy: ', err);
@@ -45,7 +35,7 @@ const ShareScore = (grid: any) => {
 
   return (
     <div>
-      <button onClick={handleShare}>Share Score</button>
+      <Button variant="outlined" onClick={handleShare}>Share</Button>
     </div>
   );
 };
