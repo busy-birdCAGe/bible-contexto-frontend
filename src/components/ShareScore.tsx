@@ -16,8 +16,7 @@ const ShareScore = ({
     if (navigator.share) {
       navigator.share({
         title: 'Bible Contexto',
-        text: `I guessed the word in ${guesses} guesses:\n\n${guessStats}\n`,
-        url: window.location.href
+        text: `I guessed the word in ${guesses} guesses:\n\n${guessStats}\n${window.location.href}`,
       }).then(() => {
         console.log('Score shared successfully');
       }).catch(err => {
