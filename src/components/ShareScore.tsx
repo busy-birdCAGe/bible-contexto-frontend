@@ -23,7 +23,6 @@ const ShareScore = ({
         console.error('Error sharing the score: ', err);
       });
     } else {
-      // Fallback for browsers that do not support the Web Share API
       navigator.clipboard.writeText(`I guessed the word in ${guesses} guesses:\n${guessStats}\n\n${window.location.href}`).then(() => {
         alert('Score copied to clipboard!');
       }).catch(err => {
@@ -34,7 +33,7 @@ const ShareScore = ({
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleShare}>Share</Button>
+      <Button variant="outlined" color="inherit" onClick={handleShare}>Share</Button>
     </div>
   );
 };
