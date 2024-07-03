@@ -200,8 +200,6 @@ const GamePage = () => {
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
-      <div>
-    </div>
       {/* ToDo make space for error message so words dont get moved down*/}
       {/* {errorMessage ? (
         <GameInfoHeader title={errorMessage} />
