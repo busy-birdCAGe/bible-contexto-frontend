@@ -9,7 +9,6 @@ import { gameStateKey, languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
-import { RWebShare } from "react-web-share";
 import ShareScore from '../components/ShareScore';
 
 export interface colorCounts {
@@ -201,17 +200,6 @@ const GamePage = () => {
         handleSubmit={handleGuess}
       />
       <div>
-      <RWebShare
-        data={{
-          text: "Like humans, flamingos make friends for life",
-          url: "https://on.natgeo.com/2zHaNup",
-          title: "Flamingos",
-        }}
-        onClick={() => console.log("shared successfully!")}
-      >
-        <button>Share 🔗</button>
-      </RWebShare>
-      <ShareScore/>
     </div>
       {/* ToDo make space for error message so words dont get moved down*/}
       {/* {errorMessage ? (
