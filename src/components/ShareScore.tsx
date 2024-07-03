@@ -16,7 +16,7 @@ const ShareScore = ({
     if (navigator.share) {
       navigator.share({
         title: 'Bible Contexto',
-        text: `I guessed the word in ${guesses} guesses:\n\n${guessStats}\n${window.location.href}`,
+        text: `I guessed the word in ${guesses} guesses:\n\n${guessStats}\n\n${window.location.href}`,
       }).then(() => {
         console.log('Score shared successfully');
       }).catch(err => {
@@ -24,7 +24,7 @@ const ShareScore = ({
       });
     } else {
       // Fallback for browsers that do not support the Web Share API
-      navigator.clipboard.writeText(`I guessed the word in ${guesses} guesses:\n${guessStats}`).then(() => {
+      navigator.clipboard.writeText(`I guessed the word in ${guesses} guesses:\n${guessStats}\n\n${window.location.href}`).then(() => {
         alert('Score copied to clipboard!');
       }).catch(err => {
         console.error('Failed to copy: ', err);
