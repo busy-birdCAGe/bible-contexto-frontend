@@ -9,7 +9,6 @@ import { gameStateKey, languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
-import ShareScore from '../components/ShareScore';
 
 export interface colorCounts {
   greenCount: number;
