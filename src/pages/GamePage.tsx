@@ -174,7 +174,7 @@ const GamePage = () => {
         maxWidth: "400px",
       }}
     >
-      <Title title="Bible Contexto" />
+      <Title title="Bible Contexto Test" />
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
 
       {wordFound && (
