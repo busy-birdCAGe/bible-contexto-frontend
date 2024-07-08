@@ -1,10 +1,8 @@
-name: Dev Deploy
+name: Uat Deploy
 on:
   push:
     branches:
-      - "**"
-      - "!develop"
-      - "!main"
+      - develop
 permissions:
   id-token: write
   contents: read
@@ -23,7 +21,7 @@ jobs:
           npm install
       - name: Configure Environment Vars
         run: |
-          cp environments/dev-env.tsx src/env.tsx
+          cp environments/uat-env.tsx src/env.tsx
       - name: Build
         run: |
           npm run build
@@ -31,7 +29,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::679274284562:role/GitHubAction-AssumeRoleWithAction
-          role-session-name: dev-deploy-session
+          role-session-name: uat-deploy-session
           aws-region: us-east-1
       - name: Install Sam CLI
         uses: aws-actions/setup-sam@v2
@@ -40,10 +38,10 @@ jobs:
       - name: Sam Build
         run: sam build --template-file "template.yaml" --use-container
       - name: Sam Deploy
-        run: sam deploy --template-file "template.yaml" --stack-name "dev-bible-contexto-frontend" --parameter-overrides "BucketName=dev.biblecontexto.com" --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3 --region "us-east-1" --capabilities "CAPABILITY_IAM"
+        run: sam deploy --template-file "template.yaml" --stack-name "uat-bible-contexto-frontend" --parameter-overrides "BucketName=uat.biblecontexto.com" --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3 --region "us-east-1" --capabilities "CAPABILITY_IAM"
       - name:  Upload Build To S3
         run: |
-          aws s3 cp dist s3://dev.biblecontexto.com --recursive
-      - name: Reset Cloudfront Cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id E2MDJ3R83GW8VI --paths "/*"
+          aws s3 cp dist s3://uat.biblecontexto.com --recursive
+      # - name: Reset Cloudfront Cache
+      #   run: |
+      #     aws cloudfront create-invalidation --distribution-id E2MDJ3R83GW8VI --paths "/*"
