@@ -42,6 +42,6 @@ jobs:
       - name:  Upload Build To S3
         run: |
           aws s3 cp dist s3://uat.biblecontexto.com --recursive
-      # - name: Reset Cloudfront Cache
-      #   run: |
-      #     aws cloudfront create-invalidation --distribution-id E2MDJ3R83GW8VI --paths "/*"
+      - name: Reset Cloudfront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id EP6ZE0I5BWGCX --paths "/*"
