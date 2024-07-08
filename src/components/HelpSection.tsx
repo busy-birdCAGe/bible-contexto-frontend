@@ -54,7 +54,7 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
       </Box>
       <Box sx={{ color: "white", textAlign: "left", marginBottom: "20px", fontSize: "15px" }}>
           Words with lower scores are closer to the word of the day, which has a
-          score of 1.
+          score of 1. #This is a test#
       </Box>
       
     </Box>
