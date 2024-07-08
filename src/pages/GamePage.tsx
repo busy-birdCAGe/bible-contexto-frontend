@@ -10,6 +10,7 @@ import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
 
+
 export interface colorCounts {
   greenCount: number;
   yellowCount: number;
