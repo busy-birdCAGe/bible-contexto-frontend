@@ -81,11 +81,11 @@ const GamePage = () => {
         state.gameStates
       );
       state.dailyGames = guessService.daily_games.map((g) => g.game_id);
-      if (!state.gameStates[gameId]) {
-        if (gameId && wordId) {
+      if (gameId && !state.gameStates[gameId]) {
+        if (wordId) {
           state.gameStates = createNewGame(gameId, wordId, state.gameStates);
         }
-        if (!wordId) {
+        else {
           window.location.search = "";
           location.reload();
         }
