@@ -37,8 +37,7 @@ export default class GuessService {
     const current_time = Math.floor(Date.now() / 1000);
 
     this.word = await this.backend_get("key_of_the_day");
-    let word_list_string = await this.backend_get(this.word);
-    this.word_list = word_list_string.split(",");
+    await this.get_word_list(this.word);
 
     let daily_games_raw = await this.backend_get("daily_games")
     this.daily_games = daily_games_raw.split("\n").map(line => {
@@ -69,6 +68,11 @@ export default class GuessService {
       throw new Error(errorMessages.backend.any);
     }
     return await response.text();
+  }
+
+  async get_word_list(word_key: string): Promise<void> {
+    let word_list_string = await this.backend_get(word_key);
+    this.word_list = word_list_string.split(",");
   }
 
   is_word(word: string): boolean {

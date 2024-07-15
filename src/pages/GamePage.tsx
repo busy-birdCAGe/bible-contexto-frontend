@@ -97,6 +97,7 @@ const GamePage = () => {
       state.gameStates[gameIdInUse].colorCounts = colorCounts;
       state.gameStates[gameIdInUse].wordFound = wordFound;
       state.save();
+      guessService.get_word_list(state.gameStates[gameIdInUse].wordOfTheDay);
     });
   }, []);
 
