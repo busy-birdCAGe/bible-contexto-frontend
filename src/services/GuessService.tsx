@@ -9,8 +9,14 @@ interface GuessServiceData {
   cache_expiration: number;
 }
 
+export interface DailyGame {
+  game_id: string
+  word_id: string
+}
+
 export default class GuessService {
   word?: string;
+  daily_games: Array<DailyGame> = [];
   language?: string;
   word_list?: Array<string>;
   guess_words?: Array<string>;
@@ -30,46 +36,39 @@ export default class GuessService {
     this.language = language;
     const current_time = Math.floor(Date.now() / 1000);
 
-    let response = await fetch(
-      `${BACKEND_BUCKET}/${this.language}/key_of_the_day`
-    );
-    if (!response.ok) {
-      throw new Error(errorMessages.backend.any);
-    }
-    this.word = await response.text();
-
-    response = await fetch(`${BACKEND_BUCKET}/${this.language}/${this.word}`);
-    if (!response.ok) {
-      throw new Error(errorMessages.backend.any);
-    }
-    let word_list_string = await response.text();
+    this.word = await this.backend_get("key_of_the_day");
+    let word_list_string = await this.backend_get(this.word);
     this.word_list = word_list_string.split(",");
 
+    let daily_games_raw = await this.backend_get("daily_games")
+    this.daily_games = daily_games_raw.split("\n").map(line => {
+      let [game_id, word_id] = line.split(",")
+      return {game_id, word_id}
+    })
+
     if (!this.guess_words || this.cache_expiration < current_time) {
-      response = await fetch(
-        `${BACKEND_BUCKET}/${this.language}/guess_words.txt`
-      );
-      if (!response.ok) {
-        throw new Error(errorMessages.backend.any);
-      }
-      let guess_words_string = await response.text();
+      let guess_words_string = await this.backend_get("guess_words.txt")
       this.guess_words = guess_words_string.split("\n");
       this.cache_expiration = current_time + 60 * 60;
       this.save_cache();
     }
 
     if (!this.stop_words || this.cache_expiration < current_time) {
-      response = await fetch(
-        `${BACKEND_BUCKET}/${this.language}/stop_words.txt`
-      );
-      if (!response.ok) {
-        throw new Error(errorMessages.backend.any);
-      }
-      let stop_words_string = await response.text();
+      let stop_words_string = await this.backend_get("stop_words.txt")
       this.stop_words = stop_words_string.split("\n");
       this.cache_expiration = current_time + 60 * 60;
       this.save_cache();
     }
+  }
+
+  async backend_get(url: string): Promise<string> {
+    let response = await fetch(
+      `${BACKEND_BUCKET}/${this.language}/${url}`
+    );
+    if (!response.ok) {
+      throw new Error(errorMessages.backend.any);
+    }
+    return await response.text();
   }
 
   is_word(word: string): boolean {

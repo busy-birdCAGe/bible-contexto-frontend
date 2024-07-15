@@ -5,10 +5,11 @@ import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
 import GuessService from "../services/GuessService";
-import { gameStateKey, languages } from "../constants";
+import { gameStateKey, languages, emptyGameState } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
+import { getQueryParams, createNewGame, updateDailyGames } from "../utils";
 
 export interface colorCounts {
   greenCount: number;
@@ -16,7 +17,7 @@ export interface colorCounts {
   redCount: number;
 }
 
-interface GameState {
+export interface GameState {
   current?: Guess;
   guesses: Guess[];
   guessCount: number;
@@ -26,35 +27,21 @@ interface GameState {
 }
 
 class State {
-  currentGame: GameState;
-  pastGames: Array<GameState>;
-  sharedGames: Array<GameState>;
+  gameStates: Record<string, GameState>;
+  dailyGames: Array<string>;
 
   constructor() {
     let state = JSON.parse(localStorage.getItem(gameStateKey) || "{}");
-    this.currentGame = {
-      current: state?.currentGame?.current,
-      guesses: state?.currentGame?.guesses || [],
-      guessCount: state?.currentGame?.guessCount || 0,
-      colorCounts: { ...state?.currentGame?.colorCounts } || {
-        greenCount: 0,
-        yellowCount: 0,
-        redCount: 0,
-      },
-      wordFound: state?.currentGame?.wordFound || false,
-      wordOfTheDay: state?.currentGame?.wordOfTheDay || "",
-    };
-    this.pastGames = state.pastGames || [];
-    this.sharedGames = state.sharedGames || [];
+    this.gameStates = state.gameStates || {};
+    this.dailyGames = state.dailyGames || [];
   }
 
   save() {
     localStorage.setItem(
       gameStateKey,
       JSON.stringify({
-        currentGame: this.currentGame,
-        pastGames: this.pastGames,
-        sharedGames: this.sharedGames
+        gameStates: this.gameStates,
+        dailyGames: this.dailyGames,
       })
     );
   }
@@ -65,41 +52,51 @@ const guessService = new GuessService();
 const GamePage = () => {
   const language = languages.english;
   let state = new State();
+  const queryParams = getQueryParams();
+  const gameId = queryParams.gameId;
+  const wordId = queryParams.wordId;
+
+  const latestDailyGame = state.gameStates[state.dailyGames.slice(-1)[0]];
+
+  let currentGame =
+    (!gameId && latestDailyGame) || state.gameStates[gameId] || emptyGameState;
+
   const [inputValue, setInputValue] = useState("");
-  const [current, setCurrent] = useState<Guess | undefined>(state.currentGame.current);
-  const [guesses, setGuesses] = useState<Guess[]>(state.currentGame.guesses);
-  const [guessCount, setGuessCount] = useState<number>(
-    state.currentGame.guessCount
+  const [current, setCurrent] = useState<Guess | undefined>(
+    currentGame.current
   );
+  const [guesses, setGuesses] = useState<Guess[]>(currentGame.guesses);
+  const [guessCount, setGuessCount] = useState<number>(currentGame.guessCount);
   const [colorCounts, setColorCounts] = useState<colorCounts>(
-    state.currentGame.colorCounts
+    currentGame.colorCounts
   );
-  const [wordFound, setWordFound] = useState<boolean>(
-    state.currentGame.wordFound
-  );
+  const [wordFound, setWordFound] = useState<boolean>(currentGame.wordFound);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
-  state.currentGame.current = current;
-  state.currentGame.guesses = guesses;
-  state.currentGame.guessCount = guessCount;
-  state.currentGame.colorCounts = colorCounts;
-  state.currentGame.wordFound = wordFound;
-  state.save();
 
   useEffect(() => {
     guessService.init(language).then(() => {
-      if (state.currentGame.wordOfTheDay != guessService.word) {
-        if (state.currentGame.wordOfTheDay) {
-          state.pastGames.push(JSON.parse(JSON.stringify(state.currentGame)));
+      state.gameStates = updateDailyGames(
+        guessService.daily_games,
+        state.gameStates
+      );
+      state.dailyGames = guessService.daily_games.map((g) => g.game_id);
+      if (!state.gameStates[gameId]) {
+        if (gameId && wordId) {
+          state.gameStates = createNewGame(gameId, wordId, state.gameStates);
         }
-        setCurrent(undefined);
-        setGuesses([]);
-        setGuessCount(0);
-        setColorCounts({ greenCount: 0, yellowCount: 0, redCount: 0 });
-        setWordFound(false);
-        state.currentGame.wordOfTheDay = guessService.word!;
-        state.save();
+        if (!wordId) {
+          window.location.search = "";
+          location.reload();
+        }
       }
+      let gameIdInUse = gameId || state.dailyGames.slice(-1)[0];
+      state.gameStates[gameIdInUse].current = current;
+      state.gameStates[gameIdInUse].guesses = guesses;
+      state.gameStates[gameIdInUse].guessCount = guessCount;
+      state.gameStates[gameIdInUse].colorCounts = colorCounts;
+      state.gameStates[gameIdInUse].wordFound = wordFound;
+      state.save();
     });
   }, []);
 
@@ -133,9 +130,7 @@ const GamePage = () => {
         return;
       }
       if (guessService.is_stop_word(inputValue)) {
-        setErrorMessage(
-          `${normalize_word(inputValue)} is too common`
-        );
+        setErrorMessage(`${normalize_word(inputValue)} is too common`);
         setInputValue("");
         return;
       }
