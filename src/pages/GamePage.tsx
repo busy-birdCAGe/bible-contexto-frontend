@@ -61,6 +61,8 @@ const GamePage = () => {
   let currentGame =
     (!gameId && latestDailyGame) || state.gameStates[gameId] || emptyGameState;
 
+  let gameIdInUse: string;
+
   const [inputValue, setInputValue] = useState("");
   const [current, setCurrent] = useState<Guess | undefined>(
     currentGame.current
@@ -90,7 +92,7 @@ const GamePage = () => {
           location.reload();
         }
       }
-      let gameIdInUse = gameId || state.dailyGames.slice(-1)[0];
+      gameIdInUse = gameId || state.dailyGames.slice(-1)[0];
       state.gameStates[gameIdInUse].current = current;
       state.gameStates[gameIdInUse].guesses = guesses;
       state.gameStates[gameIdInUse].guessCount = guessCount;
@@ -109,6 +111,7 @@ const GamePage = () => {
       ).length;
       let redCount = guesses.filter((obj) => obj.score > 1000).length;
       setColorCounts({ greenCount, yellowCount, redCount });
+      state.gameStates[gameIdInUse].colorCounts = colorCounts;
       state.save();
     }
   }, [wordFound]);
@@ -157,14 +160,18 @@ const GamePage = () => {
       });
       if (!wordFound) {
         setGuessCount(guessCount + 1);
+        state.gameStates[gameIdInUse].guessCount = guessCount;
       }
       if (currentGuess.score == 1) {
         setWordFound(true);
+        state.gameStates[gameIdInUse].wordFound = wordFound;
       }
       setInputValue("");
     } catch (error: any) {
       setErrorMessage(error.message);
     }
+    state.gameStates[gameIdInUse].current = current;
+    state.gameStates[gameIdInUse].guesses = guesses;
     state.save();
   };
 
