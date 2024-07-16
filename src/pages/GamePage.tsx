@@ -12,7 +12,10 @@ import HelpSection from "../components/HelpSection";
 import {
   getQueryParams,
   createNewGame,
-  updateDailyGames
+  updateDailyGames,
+  stemWord,
+  makeGuess,
+  normalizeWord
 } from "../utils";
 import { State } from "../GameState";
 
@@ -45,7 +48,7 @@ const GamePage = () => {
       const currentGameId = gameId || state.dailyGames.slice(-1)[0];
       state.setGameIdInUse(currentGameId);
       state.save();
-      guessService.get_word_list(state.gameStates[currentGameId].wordOfTheDay);
+      guessService.getWordList(state.gameStates[currentGameId].wordOfTheDay);
     });
   }, []);
 
@@ -60,39 +63,33 @@ const GamePage = () => {
     }
   }, [state.wordFound]);
 
-  const normalize_word = (word: string) => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleGuess = () => {
     setErrorMessage("");
-    let stemmed_word = guessService.stem_word(inputValue);
+    let stemmed_word = stemWord(inputValue);
     try {
       if (state.guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
-        setErrorMessage(`${normalize_word(inputValue)} was already guessed`);
+        setErrorMessage(`${normalizeWord(inputValue)} was already guessed`);
         setInputValue("");
         return;
       }
-      if (guessService.is_stop_word(inputValue)) {
-        setErrorMessage(`${normalize_word(inputValue)} is too common`);
+      if (guessService.isStopWord(inputValue)) {
+        setErrorMessage(`${normalizeWord(inputValue)} is too common`);
         setInputValue("");
         return;
       }
-      if (!guessService.is_word(inputValue)) {
-        setErrorMessage(
-          `${normalize_word(inputValue)} is not in the NIV bible`
-        );
+      if (!guessService.isWord(inputValue)) {
+        setErrorMessage(`${normalizeWord(inputValue)} is not in the NIV bible`);
         setInputValue("");
         return;
       }
-      let score = guessService.guess(stemmed_word);
+      let score = makeGuess(stemmed_word, guessService.wordList || []);
       let currentGuess = {
         score,
-        word: normalize_word(inputValue),
+        word: normalizeWord(inputValue),
         stemmed_word,
       };
       state.updateCurrent(currentGuess);

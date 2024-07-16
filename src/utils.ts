@@ -1,6 +1,8 @@
 import { emptyGameState } from "./constants";
 import { GameState } from "./GameState";
 import { DailyGame } from "./services/GuessService";
+import { errorMessages } from "./constants";
+import { stem } from "stemr";
 
 export function getQueryParams(): Record<string, string> {
   const params = new URLSearchParams(window.location.search);
@@ -27,10 +29,33 @@ export function updateDailyGames(
   gameStates: Record<string, GameState>
 ): Record<string, GameState> {
   for (let dailyGame of newDailyGames) {
-    gameStates[dailyGame.game_id] = gameStates[dailyGame.game_id] || {
+    gameStates[dailyGame.gameId] = gameStates[dailyGame.gameId] || {
       ...emptyGameState,
-      wordOfTheDay: dailyGame.word_id,
+      wordOfTheDay: dailyGame.wordId,
     };
   }
   return gameStates;
 }
+
+export function stemWord(word: string): string {
+    let lower: string = word.toLowerCase();
+    return stem(lower);
+  }
+
+export function makeGuess(word: string, wordList: string[]): number {
+    if (wordList.length == 0) {
+      throw Error(errorMessages.guessing.noData);
+    }
+    let index = wordList.indexOf(word);
+    if (index == -1 && word.endsWith("s")) {
+      index = wordList.indexOf(word.slice(0, -1));
+    }
+    if (index == -1) {
+      throw Error(errorMessages.guessing.unknown);
+    }
+    return index + 1;
+  }
+
+export const normalizeWord = (word: string) => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
+  };

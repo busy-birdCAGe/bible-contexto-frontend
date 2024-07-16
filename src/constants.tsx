@@ -34,5 +34,6 @@ export const gameStateKey = "state";
 export const bucketKeys = {
   dailyGames: "daily_games",
   guessWords: "guess_words.txt",
-  stopWords: "stop_words.txt"
+  stopWords: "stop_words.txt",
+  wordToIdMapping: "word_to_id_mapping"
 };
