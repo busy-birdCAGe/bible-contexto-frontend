@@ -1,4 +1,4 @@
-import { GameState } from "./pages/GamePage"
+import { GameState } from "./GameState"
 
 export const emptyGameState: GameState = {
   current: undefined,
