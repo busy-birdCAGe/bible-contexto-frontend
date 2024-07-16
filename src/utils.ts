@@ -43,19 +43,23 @@ export function stemWord(word: string): string {
   }
 
 export function makeGuess(word: string, wordList: string[]): number {
-    if (wordList.length == 0) {
-      throw Error(errorMessages.guessing.noData);
-    }
-    let index = wordList.indexOf(word);
-    if (index == -1 && word.endsWith("s")) {
-      index = wordList.indexOf(word.slice(0, -1));
-    }
-    if (index == -1) {
-      throw Error(errorMessages.guessing.unknown);
-    }
-    return index + 1;
+  if (wordList.length == 0) {
+    throw Error(errorMessages.guessing.noData);
   }
+  let index = wordList.indexOf(word);
+  if (index == -1 && word.endsWith("s")) {
+    index = wordList.indexOf(word.slice(0, -1));
+  }
+  if (index == -1) {
+    throw Error(errorMessages.guessing.unknown);
+  }
+  return index + 1;
+}
 
 export const normalizeWord = (word: string) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
-  };
+};
+
+export function generateGameUrl(wordId: string): string {
+  return `${window.location.origin}?gameId=${Math.random().toString(36).slice(-10)}&wordId=${wordId}`;
+}
