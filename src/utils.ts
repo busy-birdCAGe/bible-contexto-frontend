@@ -1,5 +1,5 @@
 import { emptyGameState } from "./constants";
-import { GameState } from "./pages/GamePage";
+import { GameState } from "./GameState";
 import { DailyGame } from "./services/GuessService";
 
 export function getQueryParams(): Record<string, string> {
