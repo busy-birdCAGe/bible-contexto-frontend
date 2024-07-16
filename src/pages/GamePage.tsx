@@ -39,8 +39,7 @@ const GamePage = () => {
         if (wordId) {
           state.gameStates = createNewGame(gameId, wordId, state.gameStates);
         } else {
-          window.location.search = "";
-          location.reload();
+          location.href = window.location.origin;
         }
       }
       const currentGameId = gameId || state.dailyGames.slice(-1)[0];
