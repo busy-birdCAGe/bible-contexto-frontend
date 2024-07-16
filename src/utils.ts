@@ -42,7 +42,7 @@ export function stemWord(word: string): string {
     return stem(lower);
   }
 
-export function makeGuess(word: string, wordList: string[]): number {
+export function getWordIndex(word: string, wordList: string[]): number {
   if (wordList.length == 0) {
     throw Error(errorMessages.guessing.noData);
   }
@@ -53,7 +53,7 @@ export function makeGuess(word: string, wordList: string[]): number {
   if (index == -1) {
     throw Error(errorMessages.guessing.unknown);
   }
-  return index + 1;
+  return index;
 }
 
 export const normalizeWord = (word: string) => {

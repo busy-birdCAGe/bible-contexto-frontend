@@ -1,6 +1,6 @@
 import { bucketKeys, errorMessages } from "../constants";
 import { BACKEND_BUCKET } from "../env";
-import { makeGuess, stemWord } from "../utils";
+import { getWordIndex, stemWord } from "../utils";
 
 
 export default class WordIdFinder {
@@ -14,7 +14,7 @@ export default class WordIdFinder {
     const wordToIdMapping = await this.backendGet(bucketKeys.wordToIdMapping);
     const wordList = Object.keys(wordToIdMapping);
     const stemmedWord = stemWord(word);
-    const index = makeGuess(stemmedWord, wordList);
+    const index = getWordIndex(stemmedWord, wordList);
     return wordToIdMapping[wordList[index]];
   };
 

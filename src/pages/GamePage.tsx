@@ -14,8 +14,8 @@ import {
   createNewGame,
   updateDailyGames,
   stemWord,
-  makeGuess,
-  normalizeWord
+  getWordIndex,
+  normalizeWord,
 } from "../utils";
 import { State } from "../GameState";
 
@@ -86,7 +86,8 @@ const GamePage = () => {
         setInputValue("");
         return;
       }
-      let score = makeGuess(stemmed_word, guessService.wordList || []);
+      let index = getWordIndex(stemmed_word, guessService.wordList || []);
+      let score = index + 1;
       let currentGuess = {
         score,
         word: normalizeWord(inputValue),
