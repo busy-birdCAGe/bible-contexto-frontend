@@ -31,10 +31,10 @@ const GamePage = () => {
   useEffect(() => {
     guessService.init(language).then(() => {
       state.gameStates = updateDailyGames(
-        guessService.daily_games,
+        guessService.dailyGames,
         state.gameStates
       );
-      state.dailyGames = guessService.daily_games.map((g) => g.game_id);
+      state.dailyGames = guessService.dailyGames.map((g) => g.gameId);
       if (gameId && !state.gameStates[gameId]) {
         if (wordId) {
           state.gameStates = createNewGame(gameId, wordId, state.gameStates);

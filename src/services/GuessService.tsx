@@ -1,61 +1,58 @@
 import { BACKEND_BUCKET } from "../env";
-import { errorMessages, guessServiceDataKey } from "../constants";
+import { errorMessages, guessServiceDataKey, bucketKeys } from "../constants";
 import { stem } from "stemr";
 
 
 interface GuessServiceData {
-  guess_words?: Array<string>;
-  stop_words?: Array<string>;
-  cache_expiration: number;
+  guessWords?: Array<string>;
+  stopWords?: Array<string>;
+  cacheExpiration: number;
 }
 
 export interface DailyGame {
-  game_id: string
-  word_id: string
+  gameId: string
+  wordId: string
 }
 
 export default class GuessService {
   word?: string;
-  daily_games: Array<DailyGame> = [];
+  dailyGames: Array<DailyGame> = [];
   language?: string;
-  word_list?: Array<string>;
-  guess_words?: Array<string>;
-  stop_words?: Array<string>;
-  cache_expiration: number;
+  wordList?: Array<string>;
+  guessWords?: Array<string>;
+  stopWords?: Array<string>;
+  cacheExpiration: number;
 
   constructor() {
     let data: GuessServiceData = JSON.parse(
       localStorage.getItem(guessServiceDataKey) || "{}"
     );
-    this.guess_words = data.guess_words;
-    this.stop_words = data.stop_words;
-    this.cache_expiration = data.cache_expiration || 0;
+    this.guessWords = data.guessWords;
+    this.stopWords = data.stopWords;
+    this.cacheExpiration = data.cacheExpiration || 0;
   }
 
   async init(language: string): Promise<void> {
     this.language = language;
     const current_time = Math.floor(Date.now() / 1000);
 
-    this.word = await this.backend_get("key_of_the_day");
-    await this.get_word_list(this.word);
-
-    let daily_games_raw = await this.backend_get("daily_games")
-    this.daily_games = daily_games_raw.split("\n").map(line => {
-      let [game_id, word_id] = line.split(",")
-      return {game_id, word_id}
+    let dailyGamesRaw = await this.backend_get(bucketKeys.dailyGames);
+    this.dailyGames = dailyGamesRaw.split("\n").map(line => {
+      let [gameId, wordId] = line.split(",")
+      return {gameId, wordId}
     })
 
-    if (!this.guess_words || this.cache_expiration < current_time) {
-      let guess_words_string = await this.backend_get("guess_words.txt")
-      this.guess_words = guess_words_string.split("\n");
-      this.cache_expiration = current_time + 60 * 60;
+    if (!this.guessWords || this.cacheExpiration < current_time) {
+      let guessWords_string = await this.backend_get(bucketKeys.guessWords);
+      this.guessWords = guessWords_string.split("\n");
+      this.cacheExpiration = current_time + 60 * 60;
       this.save_cache();
     }
 
-    if (!this.stop_words || this.cache_expiration < current_time) {
-      let stop_words_string = await this.backend_get("stop_words.txt")
-      this.stop_words = stop_words_string.split("\n");
-      this.cache_expiration = current_time + 60 * 60;
+    if (!this.stopWords || this.cacheExpiration < current_time) {
+      let stopWords_string = await this.backend_get(bucketKeys.stopWords)
+      this.stopWords = stopWords_string.split("\n");
+      this.cacheExpiration = current_time + 60 * 60;
       this.save_cache();
     }
   }
@@ -70,21 +67,21 @@ export default class GuessService {
     return await response.text();
   }
 
-  async get_word_list(word_key: string): Promise<void> {
-    let word_list_string = await this.backend_get(word_key);
-    this.word_list = word_list_string.split(",");
+  async get_word_list(wordKey: string): Promise<void> {
+    let wordListString = await this.backend_get(wordKey);
+    this.wordList = wordListString.split(",");
   }
 
   is_word(word: string): boolean {
-    if (this.guess_words) {
-      return this.guess_words.includes(word.toLowerCase());
+    if (this.guessWords) {
+      return this.guessWords.includes(word.toLowerCase());
     }
     return true;
   }
 
   is_stop_word(word: string): boolean {
-    if (this.stop_words) {
-      return this.stop_words.includes(word.toLowerCase());
+    if (this.stopWords) {
+      return this.stopWords.includes(word.toLowerCase());
     }
     return false;
   }
@@ -95,12 +92,12 @@ export default class GuessService {
   }
 
   guess(word: string): number {
-    if (!this.word_list) {
+    if (!this.wordList) {
       throw Error(errorMessages.guessing.noData);
     }
-    let index = this.word_list.indexOf(word);
+    let index = this.wordList.indexOf(word);
     if (index == -1 && word.endsWith("s")) {
-      index = this.word_list.indexOf(word.slice(0, -1));
+      index = this.wordList.indexOf(word.slice(0, -1));
     }
     if (index == -1) {
       throw Error(errorMessages.guessing.unknown);
@@ -112,9 +109,9 @@ export default class GuessService {
     localStorage.setItem(
       guessServiceDataKey,
       JSON.stringify({
-        guess_words: this.guess_words,
-        stop_words: this.stop_words,
-        cache_expiration: this.cache_expiration,
+        guessWords: this.guessWords,
+        stopWords: this.stopWords,
+        cacheExpiration: this.cacheExpiration,
       })
     );
   }

@@ -30,3 +30,9 @@ export const languages = {
 
 export const guessServiceDataKey = "word_data";
 export const gameStateKey = "state";
+
+export const bucketKeys = {
+  dailyGames: "daily_games",
+  guessWords: "guess_words.txt",
+  stopWords: "stop_words.txt"
+};
