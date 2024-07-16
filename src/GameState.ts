@@ -59,7 +59,6 @@ export class State {
   }
 
   updateCurrent(current: Guess) {
-    console.log(this.gameIdInUse);
     this.setCurrent(current);
     this.gameStates[this.gameIdInUse].current = current;
     this.save();
