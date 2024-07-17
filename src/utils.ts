@@ -57,3 +57,7 @@ export function generateGameUrl(wordId: string): string {
   const encodedToken = encodeGameToken(gameToken)
   return `${window.location.origin}/${encodedToken}`;
 }
+
+export function getGameName(gameId: string): string {
+  return gameId[0] == "s" ? "-" : "#" + gameId;
+}

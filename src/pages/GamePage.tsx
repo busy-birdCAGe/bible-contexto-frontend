@@ -15,9 +15,10 @@ import {
   normalizeWord,
   getPathToken,
   decodeGameToken,
-  generateGameUrl
+  getGameName
 } from "../utils";
 import { State } from "../GameState";
+import ErrorMessage from "../components/ErrorMessage";
 
 
 
@@ -38,9 +39,12 @@ const GamePage = () => {
       let todaysDailyGame = gameService.todaysGameToken();
       state.lastGameId = todaysDailyGame.gameId;
       const currentGame = gameToken || todaysDailyGame;
-      state.updateGameInUse(currentGame);
-      state.save();
-      gameService.getWordList(currentGame.wordId);
+      gameService.getWordList(currentGame.wordId).then(() => {
+        state.updateGameInUse(currentGame);
+        state.save();
+      }).catch(() => {
+        location.href = window.location.origin;
+      });
     });
   }, []);
 
@@ -126,7 +130,10 @@ const GamePage = () => {
         />
       )}
       <Box sx={{ display: "flex", width: "100%" }}>
-        <GameInfoHeader title={"Guesses:"} count={state.guessCount} />
+        <GameInfoHeader
+          count={state.guessCount}
+          gameName={getGameName(state.gameIdInUse)}
+        />
         <Box sx={{ display: "flex", marginLeft: "auto" }}>
           <IoMdInformationCircleOutline
             onClick={showHelp}
@@ -139,13 +146,7 @@ const GamePage = () => {
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
-      {/* ToDo make space for error message so words dont get moved down*/}
-      {/* {errorMessage ? (
-        <GameInfoHeader title={errorMessage} />
-      ) : (
-        <Guesses guesses={current ? [current] : []} currentGuess={current} />
-      )} */}
-      <GameInfoHeader title={errorMessage} />
+      <ErrorMessage message={errorMessage} />
       <Guesses
         guesses={state.current ? [state.current] : []}
         currentGuess={state.current}

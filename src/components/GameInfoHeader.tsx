@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box/Box";
 
 interface GameInfoHeaderProps {
-  title: string;
-  count?: number;
+  count: number;
+  gameName: string;
 }
-const GameInfoHeader = ({ title, count }: GameInfoHeaderProps) => {
+const GameInfoHeader = ({ count, gameName }: GameInfoHeaderProps) => {
   return (
     <Box
       sx={{
@@ -15,11 +15,17 @@ const GameInfoHeader = ({ title, count }: GameInfoHeaderProps) => {
         fontSize: 16,
         display: "flex",
         alignItems: "center",
-        width: count ? "auto" : "100%"
+        width: "100%",
       }}
     >
-      <Box>{title}</Box>
-      <Box sx={{fontSize: 24, fontWeight: "900"}}> {count}</Box>
+      <Box sx={{ display: "flex", alignItems: "center", mr: "15px" }}>
+        <Box>Game: </Box>
+        <Box sx={{ fontSize: 24, fontWeight: "900" }}>{gameName}</Box>
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box>Guesses: </Box>
+        <Box sx={{ fontSize: 24, fontWeight: "900" }}>{count}</Box>
+      </Box>
     </Box>
   );
 };
