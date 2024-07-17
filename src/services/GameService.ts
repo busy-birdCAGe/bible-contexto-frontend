@@ -1,15 +1,15 @@
 import { BACKEND_BUCKET } from "../env";
-import { errorMessages, guessServiceDataKey, bucketKeys } from "../constants";
+import { errorMessages, gameServiceDataKey, bucketKeys } from "../constants";
 import { GameToken } from "../utils";
 
 
-interface GuessServiceData {
+interface GameServiceData {
   guessWords?: Array<string>;
   stopWords?: Array<string>;
   cacheExpiration: number;
 }
 
-export default class GuessService {
+export default new class GameService {
   word?: string;
   dailyGames: Array<GameToken> = [];
   language?: string;
@@ -19,8 +19,8 @@ export default class GuessService {
   cacheExpiration: number;
 
   constructor() {
-    let data: GuessServiceData = JSON.parse(
-      localStorage.getItem(guessServiceDataKey) || "{}"
+    let data: GameServiceData = JSON.parse(
+      localStorage.getItem(gameServiceDataKey) || "{}"
     );
     this.guessWords = data.guessWords;
     this.stopWords = data.stopWords;
@@ -79,9 +79,13 @@ export default class GuessService {
     return false;
   }
 
+  todaysGameToken(): GameToken {
+    return this.dailyGames.slice(-1)[0]
+  }
+
   saveCache(): void {
     localStorage.setItem(
-      guessServiceDataKey,
+      gameServiceDataKey,
       JSON.stringify({
         guessWords: this.guessWords,
         stopWords: this.stopWords,

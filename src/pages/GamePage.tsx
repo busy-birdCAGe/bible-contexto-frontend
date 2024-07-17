@@ -4,7 +4,7 @@ import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import GuessService from "../services/GuessService";
+import gameService from "../services/GameService";
 import { languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
@@ -14,11 +14,12 @@ import {
   getWordIndex,
   normalizeWord,
   getPathToken,
-  decodeGameToken
+  decodeGameToken,
+  generateGameUrl
 } from "../utils";
 import { State } from "../GameState";
 
-const guessService = new GuessService();
+
 
 const GamePage = () => {
   const language = languages.english;
@@ -27,19 +28,19 @@ const GamePage = () => {
   if (encodedToken && !gameToken) {
     location.href = window.location.origin;
   }
-  let state = new State(gameToken);
+  const state = new State(gameToken);
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    guessService.init(language).then(() => {
-      let todaysDailyGame = guessService.dailyGames.slice(-1)[0];
+    gameService.init(language).then(() => {
+      let todaysDailyGame = gameService.todaysGameToken();
       state.lastGameId = todaysDailyGame.gameId;
       const currentGame = gameToken || todaysDailyGame;
       state.updateGameInUse(currentGame);
       state.save();
-      guessService.getWordList(state.gameStates[currentGame.gameId].wordOfTheDay);
+      gameService.getWordList(currentGame.wordId);
     });
   }, []);
 
@@ -67,17 +68,17 @@ const GamePage = () => {
         setInputValue("");
         return;
       }
-      if (guessService.isStopWord(inputValue)) {
+      if (gameService.isStopWord(inputValue)) {
         setErrorMessage(`${normalizeWord(inputValue)} is too common`);
         setInputValue("");
         return;
       }
-      if (!guessService.isWord(inputValue)) {
+      if (!gameService.isWord(inputValue)) {
         setErrorMessage(`${normalizeWord(inputValue)} is not in the NIV bible`);
         setInputValue("");
         return;
       }
-      let index = getWordIndex(stemmed_word, guessService.wordList || []);
+      let index = getWordIndex(stemmed_word, gameService.wordList || []);
       let score = index + 1;
       let currentGuess = {
         score,

@@ -28,7 +28,7 @@ export const languages = {
     english: "english"
 }
 
-export const guessServiceDataKey = "word_data";
+export const gameServiceDataKey = "word_data";
 export const gameStateKey = "state";
 
 export const bucketKeys = {
