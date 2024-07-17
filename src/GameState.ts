@@ -1,6 +1,7 @@
 import { Guess } from "./components/Guesses";
 import { useState } from "react";
 import { gameStateKey, emptyGameState } from "./constants";
+import { createNewGame, GameToken } from "./utils";
 
 export interface ColorCounts {
   greenCount: number;
@@ -31,15 +32,16 @@ export class State {
   gameIdInUse: string;
   setGameIdInUse: React.Dispatch<React.SetStateAction<string>>;
   gameStates: Record<string, GameState>;
-  dailyGames: Array<string>;
+  lastGameId?: string;
 
-  constructor(gameId: string) {
+  constructor(gameToken?: GameToken) {
     let storedState = JSON.parse(localStorage.getItem(gameStateKey) || "{}");
     this.gameStates = storedState.gameStates || {};
-    this.dailyGames = storedState.dailyGames || [];
-    const latestDailyGame = this.gameStates[this.dailyGames.slice(-1)[0]];
+    this.lastGameId = storedState.lastGameId;
     const defaultGame =
-      (!gameId && latestDailyGame) || this.gameStates[gameId] || emptyGameState;
+      (gameToken && this.gameStates[gameToken.gameId]) ||
+      (this.lastGameId && this.gameStates[this.lastGameId]) ||
+      emptyGameState;
     [this.current, this.setCurrent] = useState<Guess | undefined>(
       defaultGame.current
     );
@@ -53,9 +55,7 @@ export class State {
     [this.wordFound, this.setWordFound] = useState<boolean>(
       defaultGame.wordFound
     );
-    [this.gameIdInUse, this.setGameIdInUse] = useState<string>(
-      ""
-    );
+    [this.gameIdInUse, this.setGameIdInUse] = useState<string>("");
   }
 
   updateCurrent(current: Guess) {
@@ -89,12 +89,26 @@ export class State {
     this.save();
   }
 
+  updateGameInUse(gameToken: GameToken) {
+    if (!this.gameStates[gameToken.gameId]) {
+      this.gameStates[gameToken.gameId] = emptyGameState;
+      this.gameStates[gameToken.gameId].wordOfTheDay = gameToken.wordId;
+      this.save();
+    }
+    this.setCurrent(this.gameStates[gameToken.gameId].current);
+    this.setGuesses(this.gameStates[gameToken.gameId].guesses);
+    this.setGuessCount(this.gameStates[gameToken.gameId].guessCount);
+    this.setColorCounts(this.gameStates[gameToken.gameId].colorCounts);
+    this.setWordFound(this.gameStates[gameToken.gameId].wordFound);
+    this.setGameIdInUse(gameToken.gameId);
+  }
+
   save() {
     localStorage.setItem(
       gameStateKey,
       JSON.stringify({
         gameStates: this.gameStates,
-        dailyGames: this.dailyGames,
+        lastGameId: this.lastGameId,
       })
     );
   }

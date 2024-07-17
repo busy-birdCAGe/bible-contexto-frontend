@@ -1,40 +1,33 @@
 import { emptyGameState } from "./constants";
 import { GameState } from "./GameState";
-import { DailyGame } from "./services/GuessService";
 import { errorMessages } from "./constants";
 import { stem } from "stemr";
 
-export function getQueryParams(): Record<string, string> {
-  const params = new URLSearchParams(window.location.search);
-  const queryParams: Record<string, string> = {};
-
-  for (const [key, value] of params.entries()) {
-    queryParams[key] = value;
-  }
-  return queryParams;
+export interface GameToken {
+  gameId: string
+  wordId: string
 }
 
-export function createNewGame(
-  gameId: string,
-  wordId: string,
-  gameStates: Record<string, GameState>
-): Record<string, GameState> {
-  gameStates[gameId] = emptyGameState;
-  gameStates[gameId].wordOfTheDay = wordId;
-  return gameStates;
+export function decodeGameToken(token: string): GameToken | undefined {
+  try {
+    let rawData = atob(token);
+    let [gameId, wordId] = rawData.split(",")
+    if (!gameId || !wordId) {
+      throw Error()
+    }
+    return {gameId, wordId}
+  } catch {
+    return
+  }
 }
 
-export function updateDailyGames(
-  newDailyGames: Array<DailyGame>,
-  gameStates: Record<string, GameState>
-): Record<string, GameState> {
-  for (let dailyGame of newDailyGames) {
-    gameStates[dailyGame.gameId] = gameStates[dailyGame.gameId] || {
-      ...emptyGameState,
-      wordOfTheDay: dailyGame.wordId,
-    };
-  }
-  return gameStates;
+export function encodeGameToken(token: GameToken): string {
+  return btoa(`${token.gameId},${token.wordId}`)
+}
+
+export function getPathToken(): string | undefined {
+  const path = window.location.pathname;
+  return path != "/" ? path.split("/")[1] : undefined;
 }
 
 export function stemWord(word: string): string {
@@ -61,5 +54,8 @@ export const normalizeWord = (word: string) => {
 };
 
 export function generateGameUrl(wordId: string): string {
-  return `${window.location.origin}?gameId=${Math.random().toString(36).slice(-10)}&wordId=${wordId}`;
+  const gameId = Math.random().toString(36).slice(-10);
+  const gameToken: GameToken = {gameId, wordId};
+  const encodedToken = encodeGameToken(gameToken)
+  return `${window.location.origin}/${encodedToken}`;
 }

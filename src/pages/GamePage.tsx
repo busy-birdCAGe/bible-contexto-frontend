@@ -10,12 +10,11 @@ import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
 import {
-  getQueryParams,
-  createNewGame,
-  updateDailyGames,
   stemWord,
   getWordIndex,
   normalizeWord,
+  getPathToken,
+  decodeGameToken
 } from "../utils";
 import { State } from "../GameState";
 
@@ -23,32 +22,24 @@ const guessService = new GuessService();
 
 const GamePage = () => {
   const language = languages.english;
-  const queryParams = getQueryParams();
-  const gameId = queryParams.gameId;
-  const wordId = queryParams.wordId;
-  let state = new State(gameId);
+  const encodedToken = getPathToken();
+  const gameToken = encodedToken ? decodeGameToken(encodedToken) : undefined;
+  if (encodedToken && !gameToken) {
+    location.href = window.location.origin;
+  }
+  let state = new State(gameToken);
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
 
   useEffect(() => {
     guessService.init(language).then(() => {
-      state.gameStates = updateDailyGames(
-        guessService.dailyGames,
-        state.gameStates
-      );
-      state.dailyGames = guessService.dailyGames.map((g) => g.gameId);
-      if (gameId && !state.gameStates[gameId]) {
-        if (wordId) {
-          state.gameStates = createNewGame(gameId, wordId, state.gameStates);
-        } else {
-          location.href = window.location.origin;
-        }
-      }
-      const currentGameId = gameId || state.dailyGames.slice(-1)[0];
-      state.setGameIdInUse(currentGameId);
+      let todaysDailyGame = guessService.dailyGames.slice(-1)[0];
+      state.lastGameId = todaysDailyGame.gameId;
+      const currentGame = gameToken || todaysDailyGame;
+      state.updateGameInUse(currentGame);
       state.save();
-      guessService.getWordList(state.gameStates[currentGameId].wordOfTheDay);
+      guessService.getWordList(state.gameStates[currentGame.gameId].wordOfTheDay);
     });
   }, []);
 
