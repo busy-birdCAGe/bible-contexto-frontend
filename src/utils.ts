@@ -1,5 +1,7 @@
 import { errorMessages } from "./constants";
 import { stem } from "stemr";
+import { ColorCounts } from "./GameState";
+import { Guess } from "./components/Guesses";
 
 export interface GameToken {
   gameId: string
@@ -60,4 +62,13 @@ export function generateGameUrl(wordId: string): string {
 
 export function getGameName(gameId: string): string {
   return gameId[0] == "s" ? "-" : "#" + gameId;
+}
+
+export function getColorCounts(guesses: Guess[]): ColorCounts {
+  let greenCount = guesses.filter((obj) => obj.score < 301).length;
+  let yellowCount = guesses.filter(
+    (obj) => obj.score > 300 && obj.score < 1001
+  ).length;
+  let redCount = guesses.filter((obj) => obj.score > 1000).length;
+  return { greenCount, yellowCount, redCount };
 }

@@ -15,12 +15,11 @@ import {
   normalizeWord,
   getPathToken,
   decodeGameToken,
-  getGameName
+  getGameName,
+  getColorCounts,
 } from "../utils";
 import { State } from "../GameState";
 import ErrorMessage from "../components/ErrorMessage";
-
-
 
 const GamePage = () => {
   const language = languages.english;
@@ -37,25 +36,23 @@ const GamePage = () => {
   useEffect(() => {
     gameService.init(language).then(() => {
       let todaysDailyGame = gameService.todaysGameToken();
-      state.lastGameId = todaysDailyGame.gameId;
+      state.updateLastGameId(todaysDailyGame.gameId);
       const currentGame = gameToken || todaysDailyGame;
-      gameService.getWordList(currentGame.wordId).then(() => {
-        state.updateGameInUse(currentGame);
-        state.save();
-      }).catch(() => {
-        location.href = window.location.origin;
-      });
+      gameService
+        .getWordList(currentGame.wordId)
+        .then(() => {
+          state.updateGameInUse(currentGame);
+        })
+        .catch(() => {
+          location.href = window.location.origin;
+        });
     });
   }, []);
 
   useEffect(() => {
-    if (state.wordFound && state.guessCount == state.guesses.length) {
-      let greenCount = state.guesses.filter((obj) => obj.score < 301).length;
-      let yellowCount = state.guesses.filter(
-        (obj) => obj.score > 300 && obj.score < 1001
-      ).length;
-      let redCount = state.guesses.filter((obj) => obj.score > 1000).length;
-      state.updateColorCounts({ greenCount, yellowCount, redCount });
+    if (state.wordFound && !state.colorCounts) {
+      let colorCounts = getColorCounts(state.guesses);
+      state.updateColorCounts(colorCounts);
     }
   }, [state.wordFound]);
 
@@ -67,7 +64,9 @@ const GamePage = () => {
     setErrorMessage("");
     let stemmed_word = stemWord(inputValue);
     try {
-      if (state.guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
+      if (
+        state.guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)
+      ) {
         setErrorMessage(`${normalizeWord(inputValue)} was already guessed`);
         setInputValue("");
         return;
@@ -94,7 +93,7 @@ const GamePage = () => {
       if (!state.wordFound) {
         state.incrementGuessCount();
       }
-      if (currentGuess.score == 1) {
+      if (currentGuess.score == 1 && !state.wordFound) {
         state.markWordFound();
       }
       setInputValue("");
@@ -122,7 +121,7 @@ const GamePage = () => {
       <Title title="Bible Contexto" />
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
 
-      {state.wordFound && (
+      {state.colorCounts && (
         <CongratsSection
           guessesType1={state.colorCounts.greenCount}
           guessesType2={state.colorCounts.yellowCount}

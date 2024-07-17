@@ -13,7 +13,7 @@ export interface GameState {
   current?: Guess;
   guesses: Guess[];
   guessCount: number;
-  colorCounts: ColorCounts;
+  colorCounts?: ColorCounts;
   wordFound: boolean;
   wordOfTheDay: string;
 }
@@ -25,19 +25,19 @@ export class State {
   setGuesses: React.Dispatch<React.SetStateAction<Guess[]>>;
   guessCount: number;
   setGuessCount: React.Dispatch<React.SetStateAction<number>>;
-  colorCounts: ColorCounts;
-  setColorCounts: React.Dispatch<React.SetStateAction<ColorCounts>>;
+  colorCounts?: ColorCounts;
+  setColorCounts: React.Dispatch<React.SetStateAction<ColorCounts | undefined>>;
   wordFound: boolean;
   setWordFound: React.Dispatch<React.SetStateAction<boolean>>;
   gameIdInUse: string;
   setGameIdInUse: React.Dispatch<React.SetStateAction<string>>;
   gameStates: Record<string, GameState>;
-  lastGameId?: string;
+  lastGameId: string;
 
   constructor(gameToken?: GameToken) {
     let storedState = JSON.parse(localStorage.getItem(gameStateKey) || "{}");
     this.gameStates = storedState.gameStates || {};
-    this.lastGameId = storedState.lastGameId;
+    this.lastGameId = storedState.lastGameId || "";
     const defaultGame =
       (gameToken && this.gameStates[gameToken.gameId]) ||
       (this.lastGameId && this.gameStates[this.lastGameId]) ||
@@ -49,13 +49,13 @@ export class State {
     [this.guessCount, this.setGuessCount] = useState<number>(
       defaultGame.guessCount
     );
-    [this.colorCounts, this.setColorCounts] = useState<ColorCounts>(
+    [this.colorCounts, this.setColorCounts] = useState<ColorCounts | undefined>(
       defaultGame.colorCounts
     );
     [this.wordFound, this.setWordFound] = useState<boolean>(
       defaultGame.wordFound
     );
-    [this.gameIdInUse, this.setGameIdInUse] = useState<string>("");
+    [this.gameIdInUse, this.setGameIdInUse] = useState<string>(this.lastGameId);
   }
 
   updateCurrent(current: Guess) {
@@ -101,6 +101,11 @@ export class State {
     this.setColorCounts(this.gameStates[gameToken.gameId].colorCounts);
     this.setWordFound(this.gameStates[gameToken.gameId].wordFound);
     this.setGameIdInUse(gameToken.gameId);
+  }
+
+  updateLastGameId(gameId: string) {
+    this.lastGameId = gameId;
+    this.save();
   }
 
   save() {
