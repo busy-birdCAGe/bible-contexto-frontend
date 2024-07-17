@@ -1,7 +1,7 @@
 import { Guess } from "./components/Guesses";
 import { useState } from "react";
 import { gameStateKey, emptyGameState } from "./constants";
-import { createNewGame, GameToken } from "./utils";
+import { GameToken } from "./utils";
 
 export interface ColorCounts {
   greenCount: number;
