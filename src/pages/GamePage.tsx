@@ -109,25 +109,27 @@ const GamePage = () => {
     setInputValue(event.target.value);
   };
 
+
   const handleGuess = () => {
+    const trimmedInput = inputValue.trim();
     setErrorMessage("");
-    let stemmed_word = guessService.stem_word(inputValue);
+    let stemmed_word = guessService.stem_word(trimmedInput);
     try {
       if (guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
-        setErrorMessage(`${normalize_word(inputValue)} was already guessed`);
+        setErrorMessage(`${normalize_word(trimmedInput)} was already guessed`);
         setInputValue("");
         return;
       }
-      if (guessService.is_stop_word(inputValue)) {
+      if (guessService.is_stop_word(trimmedInput)) {
         setErrorMessage(
-          `${normalize_word(inputValue)} is too common`
+          `${normalize_word(trimmedInput)} is too common`
         );
         setInputValue("");
         return;
       }
-      if (!guessService.is_word(inputValue)) {
+      if (!guessService.is_word(trimmedInput)) {
         setErrorMessage(
-          `${normalize_word(inputValue)} is not in the NIV bible`
+          `${normalize_word(trimmedInput)} is not in the NIV bible`
         );
         setInputValue("");
         return;
@@ -135,7 +137,7 @@ const GamePage = () => {
       let score = guessService.guess(stemmed_word);
       let currentGuess = {
         score,
-        word: normalize_word(inputValue),
+        word: normalize_word(trimmedInput),
         stemmed_word,
       };
       setCurrent(currentGuess);
