@@ -1,21 +1,17 @@
 import { BACKEND_BUCKET } from "../env";
-import { errorMessages, guessServiceDataKey, bucketKeys } from "../constants";
+import { errorMessages, gameServiceDataKey, bucketKeys } from "../constants";
+import { GameToken } from "../utils";
 
 
-interface GuessServiceData {
+interface GameServiceData {
   guessWords?: Array<string>;
   stopWords?: Array<string>;
   cacheExpiration: number;
 }
 
-export interface DailyGame {
-  gameId: string
-  wordId: string
-}
-
-export default class GuessService {
+export default new class GameService {
   word?: string;
-  dailyGames: Array<DailyGame> = [];
+  dailyGames: Array<GameToken> = [];
   language?: string;
   wordList?: Array<string>;
   guessWords?: Array<string>;
@@ -23,8 +19,8 @@ export default class GuessService {
   cacheExpiration: number;
 
   constructor() {
-    let data: GuessServiceData = JSON.parse(
-      localStorage.getItem(guessServiceDataKey) || "{}"
+    let data: GameServiceData = JSON.parse(
+      localStorage.getItem(gameServiceDataKey) || "{}"
     );
     this.guessWords = data.guessWords;
     this.stopWords = data.stopWords;
@@ -36,10 +32,10 @@ export default class GuessService {
     const current_time = Math.floor(Date.now() / 1000);
 
     let dailyGamesRaw = await this.backendGet(bucketKeys.dailyGames);
-    this.dailyGames = dailyGamesRaw.split("\n").map(line => {
-      let [gameId, wordId] = line.split(",")
-      return {gameId, wordId}
-    })
+    this.dailyGames = dailyGamesRaw.split("\n").map((line) => {
+      let [gameId, wordId] = line.split(",");
+      return { gameId, wordId };
+    });
 
     if (!this.guessWords || this.cacheExpiration < current_time) {
       let guessWords_string = await this.backendGet(bucketKeys.guessWords);
@@ -49,7 +45,7 @@ export default class GuessService {
     }
 
     if (!this.stopWords || this.cacheExpiration < current_time) {
-      let stopWords_string = await this.backendGet(bucketKeys.stopWords)
+      let stopWords_string = await this.backendGet(bucketKeys.stopWords);
       this.stopWords = stopWords_string.split("\n");
       this.cacheExpiration = current_time + 60 * 60;
       this.saveCache();
@@ -57,9 +53,7 @@ export default class GuessService {
   }
 
   async backendGet(key: string): Promise<string> {
-    let response = await fetch(
-      `${BACKEND_BUCKET}/${this.language}/${key}`
-    );
+    let response = await fetch(`${BACKEND_BUCKET}/${this.language}/${key}`);
     if (!response.ok) {
       throw new Error(errorMessages.backend.any);
     }
@@ -85,9 +79,13 @@ export default class GuessService {
     return false;
   }
 
+  todaysGameToken(): GameToken {
+    return this.dailyGames.slice(-1)[0]
+  }
+
   saveCache(): void {
     localStorage.setItem(
-      guessServiceDataKey,
+      gameServiceDataKey,
       JSON.stringify({
         guessWords: this.guessWords,
         stopWords: this.stopWords,
