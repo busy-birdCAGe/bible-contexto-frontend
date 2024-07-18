@@ -4,62 +4,55 @@ import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import GuessService from "../services/GuessService";
+import gameService from "../services/GameService";
 import { languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import HelpSection from "../components/HelpSection";
 import {
-  getQueryParams,
-  createNewGame,
-  updateDailyGames,
   stemWord,
   getWordIndex,
   normalizeWord,
+  getPathToken,
+  decodeGameToken,
+  getGameName,
+  getColorCounts,
 } from "../utils";
 import { State } from "../GameState";
-
-const guessService = new GuessService();
+import ErrorMessage from "../components/ErrorMessage";
 
 const GamePage = () => {
   const language = languages.english;
-  const queryParams = getQueryParams();
-  const gameId = queryParams.gameId;
-  const wordId = queryParams.wordId;
-  let state = new State(gameId);
+  const encodedToken = getPathToken();
+  const gameToken = encodedToken ? decodeGameToken(encodedToken) : undefined;
+  if (encodedToken && !gameToken) {
+    location.href = window.location.origin;
+  }
+  const state = new State(gameToken);
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    guessService.init(language).then(() => {
-      state.gameStates = updateDailyGames(
-        guessService.dailyGames,
-        state.gameStates
-      );
-      state.dailyGames = guessService.dailyGames.map((g) => g.gameId);
-      if (gameId && !state.gameStates[gameId]) {
-        if (wordId) {
-          state.gameStates = createNewGame(gameId, wordId, state.gameStates);
-        } else {
+    gameService.init(language).then(() => {
+      let todaysDailyGame = gameService.todaysGameToken();
+      state.updateLastGameId(todaysDailyGame.gameId);
+      const currentGame = gameToken || todaysDailyGame;
+      gameService
+        .getWordList(currentGame.wordId)
+        .then(() => {
+          state.updateGameInUse(currentGame);
+        })
+        .catch(() => {
           location.href = window.location.origin;
-        }
-      }
-      const currentGameId = gameId || state.dailyGames.slice(-1)[0];
-      state.setGameIdInUse(currentGameId);
-      state.save();
-      guessService.getWordList(state.gameStates[currentGameId].wordOfTheDay);
+        });
     });
   }, []);
 
   useEffect(() => {
-    if (state.wordFound && state.guessCount == state.guesses.length) {
-      let greenCount = state.guesses.filter((obj) => obj.score < 301).length;
-      let yellowCount = state.guesses.filter(
-        (obj) => obj.score > 300 && obj.score < 1001
-      ).length;
-      let redCount = state.guesses.filter((obj) => obj.score > 1000).length;
-      state.updateColorCounts({ greenCount, yellowCount, redCount });
+    if (state.wordFound && !state.colorCounts) {
+      let colorCounts = getColorCounts(state.guesses);
+      state.updateColorCounts(colorCounts);
     }
   }, [state.wordFound]);
 
@@ -71,22 +64,24 @@ const GamePage = () => {
     setErrorMessage("");
     let stemmed_word = stemWord(inputValue);
     try {
-      if (state.guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)) {
+      if (
+        state.guesses.map((guess) => guess.stemmed_word).includes(stemmed_word)
+      ) {
         setErrorMessage(`${normalizeWord(inputValue)} was already guessed`);
         setInputValue("");
         return;
       }
-      if (guessService.isStopWord(inputValue)) {
+      if (gameService.isStopWord(inputValue)) {
         setErrorMessage(`${normalizeWord(inputValue)} is too common`);
         setInputValue("");
         return;
       }
-      if (!guessService.isWord(inputValue)) {
+      if (!gameService.isWord(inputValue)) {
         setErrorMessage(`${normalizeWord(inputValue)} is not in the NIV bible`);
         setInputValue("");
         return;
       }
-      let index = getWordIndex(stemmed_word, guessService.wordList || []);
+      let index = getWordIndex(stemmed_word, gameService.wordList || []);
       let score = index + 1;
       let currentGuess = {
         score,
@@ -98,7 +93,7 @@ const GamePage = () => {
       if (!state.wordFound) {
         state.incrementGuessCount();
       }
-      if (currentGuess.score == 1) {
+      if (currentGuess.score == 1 && !state.wordFound) {
         state.markWordFound();
       }
       setInputValue("");
@@ -126,7 +121,7 @@ const GamePage = () => {
       <Title title="Bible Contexto" />
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
 
-      {state.wordFound && (
+      {state.colorCounts && (
         <CongratsSection
           guessesType1={state.colorCounts.greenCount}
           guessesType2={state.colorCounts.yellowCount}
@@ -134,7 +129,10 @@ const GamePage = () => {
         />
       )}
       <Box sx={{ display: "flex", width: "100%" }}>
-        <GameInfoHeader title={"Guesses:"} count={state.guessCount} />
+        <GameInfoHeader
+          count={state.guessCount}
+          gameName={getGameName(state.gameIdInUse)}
+        />
         <Box sx={{ display: "flex", marginLeft: "auto" }}>
           <IoMdInformationCircleOutline
             onClick={showHelp}
@@ -147,13 +145,7 @@ const GamePage = () => {
         handleChange={handleChange}
         handleSubmit={handleGuess}
       />
-      {/* ToDo make space for error message so words dont get moved down*/}
-      {/* {errorMessage ? (
-        <GameInfoHeader title={errorMessage} />
-      ) : (
-        <Guesses guesses={current ? [current] : []} currentGuess={current} />
-      )} */}
-      <GameInfoHeader title={errorMessage} />
+      <ErrorMessage message={errorMessage} />
       <Guesses
         guesses={state.current ? [state.current] : []}
         currentGuess={state.current}
