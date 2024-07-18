@@ -60,7 +60,6 @@ const GamePage = () => {
     setInputValue(event.target.value);
   };
 
-
   const handleGuess = () => {
     const trimmedInput = inputValue.trim();
     setErrorMessage("");
