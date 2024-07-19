@@ -1,0 +1,1 @@
+export const midGame = `{"gameStates":{"8":{"guesses":[{"score":6,"word":"Tree","stemmed_word":"tree"},{"score":133,"word":"Branch","stemmed_word":"branch"},{"score":328,"word":"Eat","stemmed_word":"eat"}],"guessCount":3,"wordFound":false,"wordOfTheDay":"625fc8f4-5d80-4c18-9f42-93573a34fb6c","current":{"score":328,"word":"Eat","stemmed_word":"eat"}}},"lastGameId":"8"}`;

@@ -1,8 +1,8 @@
 import { bucketKeys } from "../src/constants";
-import { dailyGames } from "./data/dailyGames";
-import { guessWords } from "./data/guessWords";
-import { stopWords } from "./data/stopWords";
-import { wordList } from "./data/wordList";
+import { dailyGames } from "./data/backend/dailyGames";
+import { guessWords } from "./data/backend/guessWords";
+import { stopWords } from "./data/backend/stopWords";
+import { wordList } from "./data/backend/wordList";
 
 export async function backendGetMock(key) {
   switch (key) {
