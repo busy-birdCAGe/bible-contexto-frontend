@@ -1,3 +1,4 @@
+import userEvent from "@testing-library/user-event";
 import { bucketKeys } from "../src/constants";
 import { dailyGames } from "./data/backend/dailyGames";
 import { guessWords } from "./data/backend/guessWords";
@@ -16,5 +17,29 @@ export async function backendGetMock(key) {
       return wordList;
     default:
       throw Error("No mock data available");
+  }
+}
+
+export async function submitUserInput(
+  screen,
+  inputText
+) {
+  const inputElement = screen.getByPlaceholderText("Enter a word");
+  await userEvent.type(inputElement, `${inputText}{enter}`);
+}
+
+export function testTextFrequency(
+  screen,
+  expectedTextFrequencyMapping
+) {
+  for (const word of Object.keys(expectedTextFrequencyMapping)) {
+    const frequency = expectedTextFrequencyMapping[word];
+    if (frequency == 1) {
+      expect(screen.queryByText(word)).toBeInTheDocument();
+    } else if (frequency == 0) {
+      expect(screen.queryByText(word)).not.toBeInTheDocument();
+    } else {
+      expect(screen.queryAllByText(word)).toHaveLength(frequency);
+    }
   }
 }

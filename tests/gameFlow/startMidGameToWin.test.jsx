@@ -1,9 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "../../src/App";
 import gameService from "../../src/services/GameService";
-import { backendGetMock } from "../utils";
+import { backendGetMock, submitUserInput, testTextFrequency } from "../utils";
 import { midGame } from "../data/localStorage/midGame";
 import { gameStateKey } from "../../src/constants";
 
@@ -26,29 +25,33 @@ describe("Game Flow (Mid Game Refresh)", () => {
     render(<App />);
 
     expect(await screen.findByText("#8")).toBeInTheDocument();
-    expect(screen.queryAllByText("3")).toHaveLength(1);
-    expect(screen.queryByText("Congrats!")).not.toBeInTheDocument();
-    expect(screen.queryAllByText("Tree")).toHaveLength(1);
-    expect(screen.queryAllByText("Branch")).toHaveLength(1);
-    expect(screen.queryAllByText("Eat")).toHaveLength(2);
-    expect(screen.queryAllByText("328")).toHaveLength(2);
-    expect(screen.queryAllByText("6")).toHaveLength(1);
-    expect(screen.queryAllByText("133")).toHaveLength(1);
+    testTextFrequency(screen, {
+      3: 1,
+      "Congrats!": 0,
+      Tree: 1,
+      Branch: 1,
+      Eat: 2,
+      328: 2,
+      6: 1,
+      133: 1
+    });
 
-    const inputElement = screen.getByPlaceholderText("Enter a word");
+    await submitUserInput(screen, "yield")
+    testTextFrequency(screen, {
+      Yield: 2,
+      3: 2,
+      Eat: 1,
+      328: 1
+    })
 
-    await userEvent.type(inputElement, "yield{enter}");
-    expect(screen.queryAllByText("Yield")).toHaveLength(2);
-    expect(screen.queryAllByText("3")).toHaveLength(2);
-    expect(screen.queryAllByText("Eat")).toHaveLength(1);
-    expect(screen.queryAllByText("328")).toHaveLength(1);
-
-    await userEvent.type(inputElement, "fruit{enter}");
-    expect(screen.queryAllByText("Fruit")).toHaveLength(2);
-    expect(screen.queryAllByText("1")).toHaveLength(2);
-    expect(screen.queryAllByText("Yield")).toHaveLength(1);
-    expect(screen.queryAllByText("3")).toHaveLength(1);
-    expect(screen.queryByText("Congrats!")).toBeInTheDocument();
+    await submitUserInput(screen, "fruit");
+    testTextFrequency(screen, {
+      Fruit: 2,
+      1: 2,
+      Yield: 1,
+      3: 1,
+      "Congrats!": 1,
+    })
     expect(screen.queryByText(/🟩🟩🟩🟩/)).toBeInTheDocument();
     expect(screen.queryByText(/4/)).toBeInTheDocument();
     expect(screen.queryByText(/🟨/)).toBeInTheDocument();

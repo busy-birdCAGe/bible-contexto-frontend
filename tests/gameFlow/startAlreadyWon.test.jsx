@@ -1,9 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "../../src/App";
 import gameService from "../../src/services/GameService";
-import { backendGetMock } from "../utils";
+import { backendGetMock, submitUserInput, testTextFrequency } from "../utils";
 import { alreadyWon } from "../data/localStorage/alreadyWon";
 import { gameStateKey } from "../../src/constants";
 
@@ -26,26 +25,34 @@ describe("Game Flow (Already Won Refresh)", () => {
     render(<App />);
 
     expect(await screen.findByText("#8")).toBeInTheDocument();
-    screen.debug();
-    expect(screen.queryAllByText("4")).toHaveLength(1);
+
+    testTextFrequency(screen, {
+      4: 1,
+      "Congrats!": 1,
+      Fruit: 2,
+      1: 2,
+      Tree: 1,
+      Branch: 1,
+      Eat: 1,
+      328: 1
+    })
     expect(screen.queryAllByText(/4/)).toHaveLength(2);
-    expect(screen.queryByText("Congrats!")).toBeInTheDocument();
     expect(screen.queryByText(/🟩🟩🟩/)).toBeInTheDocument();
-    expect(screen.queryAllByText("Fruit")).toHaveLength(2);
-    expect(screen.queryAllByText("1")).toHaveLength(2);
-    expect(screen.queryAllByText("Tree")).toHaveLength(1);
-    expect(screen.queryAllByText("Branch")).toHaveLength(1);
-    expect(screen.queryAllByText("Eat")).toHaveLength(1);
-    expect(screen.queryAllByText("328")).toHaveLength(1);
 
-    const inputElement = screen.getByPlaceholderText("Enter a word");
-
-    await userEvent.type(inputElement, "yield{enter}");
-    expect(screen.queryAllByText("4")).toHaveLength(1);
+    await submitUserInput(screen, "yield")
+    testTextFrequency(screen, {
+      4: 1,
+      "Congrats!": 1,
+      Fruit: 1,
+      1: 1,
+      Yield: 2,
+      3: 2,
+      Tree: 1,
+      Branch: 1,
+      Eat: 1,
+      328: 1,
+    });
     expect(screen.queryAllByText(/4/)).toHaveLength(2);
-    expect(screen.queryAllByText("Fruit")).toHaveLength(1);
-    expect(screen.queryAllByText("1")).toHaveLength(1);
-    expect(screen.queryAllByText("Yield")).toHaveLength(2);
-    expect(screen.queryAllByText("3")).toHaveLength(2);
+    expect(screen.queryByText(/🟩🟩🟩/)).toBeInTheDocument();
   });
 });
