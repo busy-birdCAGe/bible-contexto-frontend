@@ -38,7 +38,6 @@ export function testTextFrequency(
   for (const word of Object.keys(expectedTextFrequencyMapping)) {
     const frequency = expectedTextFrequencyMapping[word];
     if (frequency == 1) {
-      console.log(word)
       expect(screen.queryByText(word)).toBeInTheDocument();
     } else if (frequency == 0) {
       expect(screen.queryByText(word)).not.toBeInTheDocument();
