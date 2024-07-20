@@ -3,7 +3,8 @@ import { bucketKeys } from "../src/constants";
 import { dailyGames } from "./data/backend/dailyGames";
 import { guessWords } from "./data/backend/guessWords";
 import { stopWords } from "./data/backend/stopWords";
-import { wordList } from "./data/backend/wordList";
+import { fruit } from "./data/backend/wordLists/fruit";
+import { isaiah } from "./data/backend/wordLists/isaiah";
 
 export async function backendGetMock(key) {
   switch (key) {
@@ -14,7 +15,9 @@ export async function backendGetMock(key) {
     case bucketKeys.stopWords:
       return stopWords;
     case "625fc8f4-5d80-4c18-9f42-93573a34fb6c":
-      return wordList;
+      return fruit;
+    case "1c9040fa-e869-466f-a6cb-6148e498e9b7":
+      return isaiah;
     default:
       throw Error("No mock data available");
   }
@@ -35,6 +38,7 @@ export function testTextFrequency(
   for (const word of Object.keys(expectedTextFrequencyMapping)) {
     const frequency = expectedTextFrequencyMapping[word];
     if (frequency == 1) {
+      console.log(word)
       expect(screen.queryByText(word)).toBeInTheDocument();
     } else if (frequency == 0) {
       expect(screen.queryByText(word)).not.toBeInTheDocument();

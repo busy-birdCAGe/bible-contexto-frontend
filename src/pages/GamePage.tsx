@@ -16,7 +16,7 @@ import {
   getPathToken,
   decodeGameToken,
   getGameName,
-  getColorCounts,
+  getColorCounts
 } from "../utils";
 import { State } from "../GameState";
 import ErrorMessage from "../components/ErrorMessage";
