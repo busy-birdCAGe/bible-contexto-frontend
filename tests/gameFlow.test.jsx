@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App from "../../src/App";
-import gameService from "../../src/services/GameService";
-import { backendGetMock, submitUserInput, testTextFrequency } from "../utils";
-import { alreadyWon } from "../data/localStorage/alreadyWon";
-import { midGame } from "../data/localStorage/midGame";
-import { gameStateKey } from "../../src/constants";
+import App from "../src/App";
+import gameService from "../src/services/GameService";
+import { backendGetMock, submitUserInput, testTextFrequency } from "./utils";
+import { alreadyWon } from "./data/localStorage/alreadyWon";
+import { midGame } from "./data/localStorage/midGame";
+import { gameStateKey } from "../src/constants";
 
 describe("Game Flow", () => {
   beforeEach(() => {
