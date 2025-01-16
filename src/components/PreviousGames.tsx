@@ -32,7 +32,8 @@ const PreviousGames = ({
   useEffect(() => {
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
-      setDailyGames(gameService.dailyGames);
+      const games = [...gameService.dailyGames].reverse();
+      setDailyGames(games);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -44,7 +45,7 @@ const PreviousGames = ({
       ref={ref}
       sx={{
         position: "absolute",
-        border: "1px solid white ",
+        border: "1px solid white",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -57,6 +58,9 @@ const PreviousGames = ({
         zIndex: 1,
         color: "white",
         display: visible ? "block" : "none",
+        maxHeight: "50vh",
+        overflowY: "auto",
+        scrollbarColor: "rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1)"
       }}
     >
       <Box
@@ -74,10 +78,18 @@ const PreviousGames = ({
       <Title title="Previous Games:" size={24} />
       <Box sx={{ marginTop: "10px" }}>
         {dailyGames.length > 0 ? (
-          <ul>
+          <ul style={{ padding: 0, listStyle: "none" }}>
             {dailyGames.map((gameToken, index) => (
-              <li key={index} style={{ marginBottom: "8px" }}>
-                {gameToken.gameId}
+              <li
+                key={index}
+                style={{
+                  marginBottom: "8px",
+                  padding: "8px",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  borderRadius: "4px",
+                }}
+              >
+                #{gameToken.gameId}
               </li>
             ))}
           </ul>
