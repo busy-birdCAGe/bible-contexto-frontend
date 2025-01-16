@@ -13,7 +13,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.13.0'
+          node-version: '18.20.2'
       - name: Git clone the repository
         uses: actions/checkout@v3
       - name: NPM install
@@ -22,6 +22,9 @@ jobs:
       - name: Configure Environment Vars
         run: |
           cp environments/prod-env.tsx src/env.tsx
+      - name: Tests
+        run: |
+          npm run test
       - name: Build
         run: |
           npm run build

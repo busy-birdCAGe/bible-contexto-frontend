@@ -54,7 +54,7 @@ export const normalizeWord = (word: string) => {
 };
 
 export function generateGameUrl(wordId: string): string {
-  const gameId = Math.random().toString(36).slice(-10);
+  const gameId = "s" + Math.random().toString(36).slice(-9);
   const gameToken: GameToken = {gameId, wordId};
   const encodedToken = encodeGameToken(gameToken)
   return `${window.location.origin}/${encodedToken}`;
