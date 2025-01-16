@@ -4,7 +4,8 @@ import Menu from "@mui/material/Menu";
 import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import HelpSection from "./HelpSection";
-
+import PreviousGames from "./PreviousGames";
+import GameService from "../services/GameService";
 
 
 interface DropDownItemProps {
@@ -13,12 +14,12 @@ interface DropDownItemProps {
   closeHandler: Function;
 }
 
-const DropDownItem = (props: DropDownItemProps) => {
+const DropDownItem = ({text, handler, closeHandler}: DropDownItemProps) => {
   return (
     <MenuItem
       onClick={() => {
-        props.closeHandler();
-        props.handler();
+        closeHandler();
+        handler();
       }}
       sx={{
         fontSize: "15px",
@@ -27,13 +28,19 @@ const DropDownItem = (props: DropDownItemProps) => {
         },
       }}
     >
-      {props.text}
+      {text}
     </MenuItem>
   );
 };
 
-const DropDownMenu = () => {
+interface DropDownMenuProps {
+  gameService: GameService;
+}
+
+const DropDownMenu = ({ gameService }: DropDownMenuProps) => {
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
+  const [previousGamesVisible, setPreviousGamesVisible] =
+    useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -49,6 +56,10 @@ const DropDownMenu = () => {
     setHelpVisible(true);
   };
 
+  const showPreviousGames = () => {
+    setPreviousGamesVisible(true);
+  };
+
   return (
     <Box
       sx={{
@@ -58,6 +69,11 @@ const DropDownMenu = () => {
       }}
     >
       <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
+      <PreviousGames
+        visible={previousGamesVisible}
+        setVisibility={setPreviousGamesVisible}
+        gameService={gameService}
+      />
       <IoMenu
         onClick={handleClick}
         style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
@@ -83,7 +99,7 @@ const DropDownMenu = () => {
         ></DropDownItem>
         <DropDownItem
           text="Previous Games"
-          handler={showHelp}
+          handler={showPreviousGames}
           closeHandler={handleClose}
         ></DropDownItem>
       </Menu>

@@ -1,35 +1,43 @@
 import Box from "@mui/material/Box/Box";
-import Title from "../components/Title";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import Title from "./Title";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import GameService from "../services/GameService";
+import { GameToken } from "../utils";
 
-
-interface HelpSectionProps {
+interface PreviousGamesProps {
   setVisibility: Dispatch<SetStateAction<boolean>>;
   visible: boolean;
+  gameService: GameService;
 }
 
-const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
+const PreviousGames = ({
+  setVisibility,
+  visible,
+  gameService,
+}: PreviousGamesProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
-  
-  const hideHelp = () => {
+  const [dailyGames, setDailyGames] = useState<GameToken[]>([]);
+
+  const hidePage = () => {
     setVisibility(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
-      hideHelp();
+      hidePage();
     }
   };
 
   useEffect(() => {
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
+      setDailyGames(gameService.dailyGames);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [visible]);
+  }, [visible, gameService]);
 
   return (
     <Box
@@ -59,32 +67,26 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
         }}
       >
         <IoClose
-          onClick={hideHelp}
+          onClick={hidePage}
           style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
         />
       </Box>
-      <Title title="How To Play:" size={24} />
-      <Box sx={{ textAlign: "left", my: "12px", fontSize: "15px" }}>
-        Every day a random word is chosen out of the NIV Bible, and your goal is
-        to guess it.
-      </Box>
-      <Box sx={{ textAlign: "left", marginBottom: "12px", fontSize: "15px" }}>
-        Each of your guesses will be ranked against the word of the day by how
-        often the word appears in similar contexts.
-      </Box>
-      <Box
-        sx={{
-          color: "white",
-          textAlign: "left",
-          marginBottom: "20px",
-          fontSize: "15px",
-        }}
-      >
-        Words with lower scores are closer to the word of the day, which has a
-        score of 1.
+      <Title title="Previous Games:" size={24} />
+      <Box sx={{ marginTop: "10px" }}>
+        {dailyGames.length > 0 ? (
+          <ul>
+            {dailyGames.map((gameToken, index) => (
+              <li key={index} style={{ marginBottom: "8px" }}>
+                {gameToken.gameId}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No games available</p>
+        )}
       </Box>
     </Box>
   );
 };
 
-export default HelpSection;
+export default PreviousGames;

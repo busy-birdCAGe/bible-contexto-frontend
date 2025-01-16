@@ -3,7 +3,7 @@ import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import gameService from "../services/GameService";
+import GameService from "../services/GameService";
 import { languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
@@ -21,6 +21,7 @@ import { State } from "../GameState";
 import ErrorMessage from "../components/ErrorMessage";
 
 const GamePage = () => {
+  const gameService = new GameService();
   const language = languages.english;
   const encodedToken = getPathToken();
   const gameToken = encodedToken ? decodeGameToken(encodedToken) : undefined;
@@ -128,7 +129,7 @@ const GamePage = () => {
           count={state.guessCount}
           gameName={getGameName(state.gameIdInUse)}
         />
-        <DropDownMenu></DropDownMenu>
+        <DropDownMenu gameService={gameService}></DropDownMenu>
       </Box>
       <GuessInput
         guess={inputValue}
