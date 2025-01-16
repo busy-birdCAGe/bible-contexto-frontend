@@ -17,11 +17,10 @@ const HelpSection = ({ setVisibility, visible }: HelpSectionProps) => {
     <Box
       sx={{
         position: "absolute",
-        mt: "140px",
         border: "1px solid white ",
-        // top: "45%",
-        // left: "50%",
-        // transform: "translate(-50%, -50%)",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         backgroundColor: "rgb(34, 34, 34, 1)",
         borderRadius: "12px",
         width: "80%",

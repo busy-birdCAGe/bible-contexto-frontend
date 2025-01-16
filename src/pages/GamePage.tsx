@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box/Box";
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
@@ -8,7 +7,7 @@ import gameService from "../services/GameService";
 import { languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
-import HelpSection from "../components/HelpSection";
+import DropDownMenu from "../components/DropDownMenu";
 import {
   stemWord,
   getWordIndex,
@@ -31,7 +30,6 @@ const GamePage = () => {
   const state = new State(gameToken);
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [helpVisible, setHelpVisible] = useState<boolean>(false);
 
   useEffect(() => {
     gameService.init(language).then(() => {
@@ -105,10 +103,6 @@ const GamePage = () => {
     }
   };
 
-  const showHelp = () => {
-    setHelpVisible(!helpVisible);
-  };
-
   return (
     <Box
       sx={{
@@ -122,8 +116,6 @@ const GamePage = () => {
       }}
     >
       <Title title="Bible Contexto" />
-      <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
-
       {state.colorCounts && (
         <CongratsSection
           guessesType1={state.colorCounts.greenCount}
@@ -136,12 +128,7 @@ const GamePage = () => {
           count={state.guessCount}
           gameName={getGameName(state.gameIdInUse)}
         />
-        <Box sx={{ display: "flex", marginLeft: "auto" }}>
-          <IoMdInformationCircleOutline
-            onClick={showHelp}
-            style={{ color: "white", fontSize: "1.5em", margin: "auto 0.5rem" }}
-          />
-        </Box>
+        <DropDownMenu></DropDownMenu>
       </Box>
       <GuessInput
         guess={inputValue}
