@@ -16,7 +16,7 @@ import {
   getPathToken,
   decodeGameToken,
   getGameName,
-  getColorCounts,
+  getColorCounts
 } from "../utils";
 import { State } from "../GameState";
 import ErrorMessage from "../components/ErrorMessage";
@@ -59,7 +59,6 @@ const GamePage = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
-
 
   const handleGuess = () => {
     const trimmedInput = inputValue.trim();
