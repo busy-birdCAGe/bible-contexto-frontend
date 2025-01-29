@@ -5,7 +5,7 @@ import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import HelpSection from "./HelpSection";
 import PreviousGames from "./PreviousGames";
-import GameService from "../services/GameService";
+import { GameService } from "../services/GameService";
 import { State } from "../GameState";
 
 

@@ -9,7 +9,7 @@ interface GameServiceData {
   cacheExpiration: number;
 }
 
-export default class GameService {
+export class GameService {
   word?: string;
   dailyGames: Array<GameToken> = [];
   language?: string;
@@ -94,3 +94,5 @@ export default class GameService {
     );
   }
 };
+
+export let gameService = new GameService();

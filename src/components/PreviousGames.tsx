@@ -2,7 +2,7 @@ import Box from "@mui/material/Box/Box";
 import Title from "./Title";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import GameService from "../services/GameService";
+import { GameService } from "../services/GameService";
 import { GameToken } from "../utils";
 import { State } from "../GameState";
 
