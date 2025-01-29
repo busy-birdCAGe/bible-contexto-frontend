@@ -20,8 +20,9 @@ import {
 import { State } from "../GameState";
 import ErrorMessage from "../components/ErrorMessage";
 
+const gameService = new GameService(); //If defined in component, data is sometimes lost on re-render. Unsure what to do about this.
+
 const GamePage = () => {
-  const gameService = new GameService();
   const language = languages.english;
   const encodedToken = getPathToken();
   const gameToken = encodedToken ? decodeGameToken(encodedToken) : undefined;
@@ -129,7 +130,7 @@ const GamePage = () => {
           count={state.guessCount}
           gameName={getGameName(state.gameIdInUse)}
         />
-        <DropDownMenu gameService={gameService}></DropDownMenu>
+        <DropDownMenu gameService={gameService} state={state}></DropDownMenu>
       </Box>
       <GuessInput
         guess={inputValue}
