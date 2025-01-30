@@ -142,7 +142,7 @@ const GamePage = () => {
         guesses={state.current ? [state.current] : []}
         currentGuess={state.current}
       />
-      <br></br>
+      <br/>
       <Guesses guesses={state.guesses} currentGuess={state.current} />
     </Box>
   );

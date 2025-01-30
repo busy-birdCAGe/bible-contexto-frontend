@@ -43,10 +43,10 @@ const DropDownMenu = ({ gameService, state }: DropDownMenuProps) => {
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const [previousGamesVisible, setPreviousGamesVisible] =
     useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | SVGElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -81,7 +81,6 @@ const DropDownMenu = ({ gameService, state }: DropDownMenuProps) => {
         onClick={handleClick}
         style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
       />
-
       <Menu
         anchorEl={anchorEl}
         open={open}
