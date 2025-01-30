@@ -69,7 +69,7 @@ describe("Game Flow", () => {
   it("Shared Game Flow", async () => {
     vi.stubGlobal("location", {
       pathname:
-        "/c2FxbnJwY2JzeCwxYzkwNDBmYS1lODY5LTQ2NmYtYTZjYi02MTQ4ZTQ5OGU5Yjc=",
+        "/c2FxbnJwY2JzeCw4MzhlYzkwZC1kNTdkLTRmMjgtOWU4NC1mMjhiMDlkNWFlOWU=",
     });
 
     render(<App />);

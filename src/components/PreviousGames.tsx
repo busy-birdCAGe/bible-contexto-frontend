@@ -32,7 +32,8 @@ const PreviousGames = ({
     }
   };
 
-  const handleItemClick = (gameToken: GameToken) => {
+  const handleItemClick = async (gameToken: GameToken) => {
+    await gameService.getWordList(gameToken.wordId);
     state.updateGameInUse(gameToken);
     hidePage();
   };

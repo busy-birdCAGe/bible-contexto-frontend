@@ -18,7 +18,7 @@ export async function fetchMock(url) {
       return createFetchResponse(stopWords);
     case `${BACKEND_BUCKET}/${language}/${"625fc8f4-5d80-4c18-9f42-93573a34fb6c"}`:
       return createFetchResponse(fruit);
-    case `${BACKEND_BUCKET}/${language}/${"1c9040fa-e869-466f-a6cb-6148e498e9b7"}`:
+    case `${BACKEND_BUCKET}/${language}/${"838ec90d-d57d-4f28-9e84-f28b09d5ae9e"}`:
       return createFetchResponse(isaiah);
     default:
       throw Error("No mock data available");

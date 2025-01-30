@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "../src/App";
 import { gameStateKey } from "../src/constants";
-import { fetchMock } from "./utils";
+import { fetchMock, submitUserInput } from "./utils";
 
 describe("Previous Games", () => {
   beforeEach(() => {
@@ -46,6 +46,25 @@ describe("Previous Games", () => {
     expect(screen.queryByText("#7")).toBeInTheDocument();
     expect(screen.queryByText("#8")).not.toBeInTheDocument();
 
+  });
+
+  it("Play Previous Game", async () => {
+    render(<App />);
+
+    await submitUserInput(screen, "fruit");
+    expect(screen.queryByText(/Congrats!/)).toBeInTheDocument();
+    expect(screen.queryByText(/🟩/)).toBeInTheDocument();
+
+    const dropDownMenu = screen.getByTestId("dropdown-menu-button");
+    await userEvent.click(dropDownMenu);
+    const previousGamesItem = screen.getByText("Previous Games");
+    await userEvent.click(previousGamesItem);
+    const previousGame = screen.getByText(/#7 /);
+    await userEvent.click(previousGame);
+
+    await submitUserInput(screen, "fruit");
+    expect(screen.queryByText(/Congrats!/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/🟩/)).not.toBeInTheDocument();
   });
 
 });
