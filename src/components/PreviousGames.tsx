@@ -113,6 +113,11 @@ const PreviousGames = ({
                 date.getMonth() + 1
               }/${date.getDate()}/${date.getFullYear()}`;
 
+              const hasWon = state.gameStates[gameToken.gameId]?.wordFound;
+              const gameDetails = `${hasWon ? "⭐" : ""} #${
+                gameToken.gameId
+              } (${formattedDate})`;
+
               return (
                 <li
                   key={index}
@@ -134,7 +139,7 @@ const PreviousGames = ({
                       "rgba(255, 255, 255, 0.1)";
                   }}
                 >
-                  #{gameToken.gameId} ({formattedDate})
+                  {gameDetails}
                 </li>
               );
             })}
