@@ -1,20 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "../src/App";
-import gameService from "../src/services/GameService";
-import { backendGetMock, submitUserInput, testTextFrequency } from "./utils";
+import { submitUserInput, testTextFrequency } from "./utils";
 import { alreadyWon } from "./data/localStorage/alreadyWon";
 import { midGame } from "./data/localStorage/midGame";
 import { gameStateKey } from "../src/constants";
+import { fetchMock } from "./utils";
 
 describe("Game Flow", () => {
   beforeEach(() => {
     vi.mock("../src/env", () => {
       return {
-        BACKEND_BUCKET: "test-bucket",
+        BACKEND_BUCKET: "https://test-bible-contexto-backend.s3.amazonaws.com",
       };
     });
-    vi.spyOn(gameService, "backendGet").mockImplementation(backendGetMock);
+    global.fetch = vi.fn().mockImplementation(fetchMock);
   });
 
   afterEach(() => {
@@ -24,6 +24,7 @@ describe("Game Flow", () => {
   });
 
   it("Fresh Game Flow", async () => {
+
     render(<App />);
 
     expect(await screen.findByText("0")).toBeInTheDocument();
