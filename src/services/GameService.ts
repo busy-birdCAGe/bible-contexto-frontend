@@ -95,4 +95,5 @@ export class GameService {
   }
 };
 
-export let gameService = new GameService();
+const gameServiceInstance = new GameService();
+export { gameServiceInstance as gameService };

@@ -130,7 +130,10 @@ const GamePage = () => {
           count={state.guessCount}
           gameName={getGameName(state.gameIdInUse)}
         />
-        <DropDownMenu gameService={gameService} state={state}></DropDownMenu>
+        <DropDownMenu
+          gameService={gameService}
+          state={state}
+        ></DropDownMenu>
       </Box>
       <GuessInput
         guess={inputValue}
@@ -142,7 +145,7 @@ const GamePage = () => {
         guesses={state.current ? [state.current] : []}
         currentGuess={state.current}
       />
-      <br/>
+      <br />
       <Guesses guesses={state.guesses} currentGuess={state.current} />
     </Box>
   );

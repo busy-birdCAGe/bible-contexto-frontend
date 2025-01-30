@@ -17,20 +17,20 @@ interface DropDownItemProps {
 
 const DropDownItem = ({text, handler, closeHandler}: DropDownItemProps) => {
   return (
-    <MenuItem
-      onClick={() => {
-        closeHandler();
-        handler();
-      }}
-      sx={{
-        fontSize: "15px",
-        "&:hover": {
-          backgroundColor: "rgba(255, 255, 255, 0.1)",
-        },
-      }}
-    >
-      {text}
-    </MenuItem>
+      <MenuItem
+        onClick={() => {
+          closeHandler();
+          handler();
+        }}
+        sx={{
+          fontSize: "15px",
+          "&:hover": {
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+          },
+        }}
+      >
+        {text}
+      </MenuItem>
   );
 };
 
@@ -63,49 +63,50 @@ const DropDownMenu = ({ gameService, state }: DropDownMenuProps) => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        marginLeft: "auto",
-        margin: "auto 0.5rem",
-      }}
-    >
-      <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
-      <PreviousGames
-        visible={previousGamesVisible}
-        setVisibility={setPreviousGamesVisible}
-        gameService={gameService}
-        state={state}
-      />
-      <IoMenu
-        onClick={handleClick}
-        style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
-      />
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            backgroundColor: "rgb(34, 34, 34, 1)",
-            color: "white",
-            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.8)",
-            borderRadius: "12px",
-          },
+      <Box
+        sx={{
+          display: "flex",
+          marginLeft: "auto",
+          margin: "auto 0.5rem",
         }}
       >
-        <DropDownItem
-          text="Help"
-          handler={showHelp}
-          closeHandler={handleClose}
-        ></DropDownItem>
-        <DropDownItem
-          text="Previous Games"
-          handler={showPreviousGames}
-          closeHandler={handleClose}
-        ></DropDownItem>
-      </Menu>
-    </Box>
+        <HelpSection visible={helpVisible} setVisibility={setHelpVisible} />
+        <PreviousGames
+          visible={previousGamesVisible}
+          setVisibility={setPreviousGamesVisible}
+          gameService={gameService}
+          state={state}
+        />
+        <IoMenu
+          onClick={handleClick}
+          style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
+          data-testid="dropdown-menu-button"
+        />
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              backgroundColor: "rgb(34, 34, 34, 1)",
+              color: "white",
+              boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.8)",
+              borderRadius: "12px",
+            },
+          }}
+        >
+          <DropDownItem
+            text="Help"
+            handler={showHelp}
+            closeHandler={handleClose}
+          ></DropDownItem>
+          <DropDownItem
+            text="Previous Games"
+            handler={showPreviousGames}
+            closeHandler={handleClose}
+          ></DropDownItem>
+        </Menu>
+      </Box>
   );
 };
 
