@@ -3,7 +3,7 @@ import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import { GameService } from "../services/GameService";
+import { gameService } from "../services/GameService";
 import { languages } from "../constants";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
@@ -19,8 +19,6 @@ import {
 } from "../utils";
 import { State } from "../GameState";
 import ErrorMessage from "../components/ErrorMessage";
-
-const gameService = new GameService(); //If defined in component, data is sometimes lost on re-render. Unsure what to do about this.
 
 const GamePage = () => {
   const language = languages.english;
