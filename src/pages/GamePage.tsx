@@ -77,7 +77,7 @@ const GamePage = () => {
       }
       if (!gameService.isWord(trimmedInput)) {
         setErrorMessage(
-          `${normalizeWord(trimmedInput)} is not in the NIV bible`
+          `${normalizeWord(trimmedInput)} is not in the NIV Bible`
         );
         setInputValue("");
         return;
