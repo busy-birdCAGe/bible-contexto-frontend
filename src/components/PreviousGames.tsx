@@ -1,24 +1,25 @@
+import { useDispatch } from 'react-redux';
 import Box from "@mui/material/Box/Box";
 import Title from "./Title";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { GameService } from "../services/GameService";
+import { gameService } from "../services/GameService";
 import { GameToken } from "../utils";
-import { State } from "../GameState";
+import { useLanguage, useGameStates } from "../state/selectors";
+import { setCurrentGame } from "../state/reducer";
 
 interface PreviousGamesProps {
   setVisibility: Dispatch<SetStateAction<boolean>>;
   visible: boolean;
-  gameService: GameService;
-  state: State;
 }
 
 const PreviousGames = ({
   setVisibility,
   visible,
-  gameService,
-  state,
 }: PreviousGamesProps) => {
+  const dispatch = useDispatch();
+  const language = useLanguage();
+  const gameStates = useGameStates();
   const ref = useRef<HTMLDivElement | null>(null);
   const [dailyGames, setDailyGames] = useState<GameToken[]>([]);
 
@@ -33,12 +34,12 @@ const PreviousGames = ({
   };
 
   const handleItemClick = async (gameToken: GameToken) => {
-    await gameService.getWordList(gameToken.wordId);
-    state.updateGameInUse(gameToken);
+    dispatch(setCurrentGame(gameToken));
     hidePage();
   };
 
   useEffect(() => {
+    gameService.init(language)
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
       const games = [...gameService.dailyGames].reverse();
@@ -113,7 +114,7 @@ const PreviousGames = ({
                 date.getMonth() + 1
               }/${date.getDate()}/${date.getFullYear()}`;
 
-              const hasWon = state.gameStates[gameToken.gameId]?.wordFound;
+              const hasWon = gameStates[gameToken.gameId]?.wordFound ?? false;
               const gameDetails = `${hasWon ? "⭐" : ""} #${
                 gameToken.gameId
               } (${formattedDate})`;
