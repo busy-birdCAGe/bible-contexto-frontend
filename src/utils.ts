@@ -1,6 +1,6 @@
 import { errorMessages } from "./constants";
 import { stem } from "stemr";
-import { ColorCounts } from "./GameState";
+import { ColorCounts } from "./state/reducer";
 import { Guess } from "./components/Guesses";
 
 export interface GameToken {

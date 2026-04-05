@@ -2,11 +2,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "../src/App";
-import { gameStateKey } from "../src/constants";
+import { storageKey } from "../src/constants";
 import { fetchMock, submitUserInput } from "./utils";
 
 describe("Previous Games", () => {
   beforeEach(() => {
+    vi.resetModules(); // This resets the redux store singleton instance
     vi.mock("../src/env", () => {
       return {
         BACKEND_BUCKET: "https://test-bible-contexto-backend.s3.amazonaws.com",
@@ -18,11 +19,11 @@ describe("Previous Games", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
-    localStorage.setItem(gameStateKey, "");
+    localStorage.setItem(storageKey, "");
   });
 
   it("Select Previous Game", async () => {
-
+    const { default: App } = await import("../src/App");
     render(<App />);
 
     expect(await screen.findByText("0")).toBeInTheDocument();
@@ -49,6 +50,7 @@ describe("Previous Games", () => {
   });
 
   it("Play Previous Game", async () => {
+    const { default: App } = await import("../src/App");
     render(<App />);
 
     await submitUserInput(screen, "fruit");

@@ -1,14 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import App from "../src/App";
-import { submitUserInput, testTextFrequency } from "./utils";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { screen, render } from "@testing-library/react";
+import { submitUserInput, testTextFrequency, fetchMock } from "./utils";
 import { alreadyWon } from "./data/localStorage/alreadyWon";
 import { midGame } from "./data/localStorage/midGame";
-import { gameStateKey } from "../src/constants";
-import { fetchMock } from "./utils";
+import { storageKey } from "../src/constants";
 
 describe("Game Flow", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    vi.resetModules(); // This resets the redux store singleton instance
     vi.mock("../src/env", () => {
       return {
         BACKEND_BUCKET: "https://test-bible-contexto-backend.s3.amazonaws.com",
@@ -20,11 +19,12 @@ describe("Game Flow", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
-    localStorage.setItem(gameStateKey, "");
+    localStorage.clear();
   });
 
   it("Fresh Game Flow", async () => {
 
+    const { default: App } = await import("../src/App");
     render(<App />);
 
     expect(await screen.findByText("0")).toBeInTheDocument();
@@ -72,6 +72,7 @@ describe("Game Flow", () => {
         "/c2FxbnJwY2JzeCw4MzhlYzkwZC1kNTdkLTRmMjgtOWU4NC1mMjhiMDlkNWFlOWU=",
     });
 
+    const { default: App } = await import("../src/App");
     render(<App />);
 
     expect(await screen.findByText("0")).toBeInTheDocument();
@@ -102,7 +103,9 @@ describe("Game Flow", () => {
   });
 
   it("Load Stored Won Game State", async () => {
-    localStorage.setItem(gameStateKey, alreadyWon);
+    localStorage.setItem(storageKey, alreadyWon);
+
+    const { default: App } = await import("../src/App");
     render(<App />);
 
     expect(await screen.findByText("#8")).toBeInTheDocument();
@@ -138,7 +141,9 @@ describe("Game Flow", () => {
   });
 
   it("Load Stored Mid Game State", async () => {
-    localStorage.setItem(gameStateKey, midGame);
+    localStorage.setItem(storageKey, midGame);
+
+    const { default: App } = await import("../src/App");
     render(<App />);
 
     expect(await screen.findByText("#8")).toBeInTheDocument();

@@ -10,13 +10,13 @@ interface GameServiceData {
 }
 
 export class GameService {
-  word?: string;
   dailyGames: Array<GameToken> = [];
-  language?: string;
-  wordList?: Array<string>;
-  guessWords?: Array<string>;
-  stopWords?: Array<string>;
-  cacheExpiration: number;
+  private language?: string;
+  private wordIdInUse?: string;
+  private wordList?: Array<string>;
+  private guessWords?: Array<string>;
+  private stopWords?: Array<string>;
+  private cacheExpiration: number;
 
   constructor() {
     let data: GameServiceData = JSON.parse(
@@ -29,7 +29,7 @@ export class GameService {
 
   async init(language: string): Promise<void> {
     this.language = language;
-    const current_time = Math.floor(Date.now() / 1000);
+    const currentTime = Math.floor(Date.now() / 1000);
 
     let dailyGamesRaw = await this.backendGet(bucketKeys.dailyGames);
     this.dailyGames = dailyGamesRaw.split("\n").map((line) => {
@@ -37,22 +37,22 @@ export class GameService {
       return { gameId, wordId };
     });
 
-    if (!this.guessWords || this.cacheExpiration < current_time) {
+    if (!this.guessWords || this.cacheExpiration < currentTime) {
       let guessWords_string = await this.backendGet(bucketKeys.guessWords);
       this.guessWords = guessWords_string.split("\n");
-      this.cacheExpiration = current_time + 60 * 60;
+      this.cacheExpiration = currentTime + 60 * 60;
       this.saveCache();
     }
 
-    if (!this.stopWords || this.cacheExpiration < current_time) {
+    if (!this.stopWords || this.cacheExpiration < currentTime) {
       let stopWords_string = await this.backendGet(bucketKeys.stopWords);
       this.stopWords = stopWords_string.split("\n");
-      this.cacheExpiration = current_time + 60 * 60;
+      this.cacheExpiration = currentTime + 60 * 60;
       this.saveCache();
     }
   }
 
-  async backendGet(key: string): Promise<string> {
+  private async backendGet(key: string): Promise<string> {
     let response = await fetch(`${BACKEND_BUCKET}/${this.language}/${key}`);
     if (!response.ok) {
       throw new Error(errorMessages.backend.any);
@@ -60,9 +60,13 @@ export class GameService {
     return await response.text();
   }
 
-  async getWordList(wordKey: string): Promise<void> {
-    let wordListString = await this.backendGet(wordKey);
-    this.wordList = wordListString.split(",");
+  async getWordList(wordId: string): Promise<string[]> {
+    if (this.wordIdInUse != wordId || !this.wordList) {
+      this.wordIdInUse = wordId;
+      let wordListString = await this.backendGet(wordId);
+      this.wordList = wordListString.split(",");
+    }
+    return this.wordList;
   }
 
   isWord(word: string): boolean {

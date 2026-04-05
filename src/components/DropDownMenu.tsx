@@ -5,8 +5,6 @@ import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import HelpSection from "./HelpSection";
 import PreviousGames from "./PreviousGames";
-import { GameService } from "../services/GameService";
-import { State } from "../GameState";
 
 
 interface DropDownItemProps {
@@ -34,12 +32,7 @@ const DropDownItem = ({text, handler, closeHandler}: DropDownItemProps) => {
   );
 };
 
-interface DropDownMenuProps {
-  gameService: GameService;
-  state: State;
-}
-
-const DropDownMenu = ({ gameService, state }: DropDownMenuProps) => {
+const DropDownMenu = () => {
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const [previousGamesVisible, setPreviousGamesVisible] =
     useState<boolean>(false);
@@ -74,8 +67,6 @@ const DropDownMenu = ({ gameService, state }: DropDownMenuProps) => {
         <PreviousGames
           visible={previousGamesVisible}
           setVisibility={setPreviousGamesVisible}
-          gameService={gameService}
-          state={state}
         />
         <IoMenu
           onClick={handleClick}
