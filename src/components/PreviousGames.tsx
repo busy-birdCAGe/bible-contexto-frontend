@@ -3,7 +3,7 @@ import Box from "@mui/material/Box/Box";
 import Title from "./Title";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { gameService } from "../services/GameService";
+import GameService from "../services/GameService";
 import { GameToken } from "../utils";
 import { useLanguage, useGameStates } from "../state/selectors";
 import { setCurrentGame } from "../state/reducer";
@@ -22,6 +22,7 @@ const PreviousGames = ({
   const gameStates = useGameStates();
   const ref = useRef<HTMLDivElement | null>(null);
   const [dailyGames, setDailyGames] = useState<GameToken[]>([]);
+  const gameService = new GameService(language);
 
   const hidePage = () => {
     setVisibility(false);
@@ -39,16 +40,16 @@ const PreviousGames = ({
   };
 
   useEffect(() => {
-    gameService.init(language)
     if (visible) {
       document.addEventListener("mousedown", handleClickOutside);
-      const games = [...gameService.dailyGames].reverse();
-      setDailyGames(games);
+      gameService.dailyGameTokens().then((games) => {
+        setDailyGames([...games].reverse());
+      });
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [visible, gameService]);
+  }, [visible]);
 
   return (
     <Box
