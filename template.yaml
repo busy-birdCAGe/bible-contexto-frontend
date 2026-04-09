@@ -20,6 +20,7 @@ Resources:
         RestrictPublicBuckets: false
       WebsiteConfiguration:
         IndexDocument: index.html
+        ErrorDocument: index.html
 
   FrontEndBucketPolicy:
     Type: AWS::S3::BucketPolicy
