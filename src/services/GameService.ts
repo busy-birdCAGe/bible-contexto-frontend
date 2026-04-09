@@ -1,103 +1,44 @@
-import { BACKEND_BUCKET } from "../env";
-import { errorMessages, gameServiceDataKey, bucketKeys } from "../constants";
+import { bucketKeys } from "../constants";
 import { GameToken } from "../utils";
+import BackendApi from "../api";
 
 
-interface GameServiceData {
-  guessWords?: Array<string>;
-  stopWords?: Array<string>;
-  cacheExpiration: number;
-}
+export default class GameService {
+  private language: string;
+  private backendApi: BackendApi;
 
-export class GameService {
-  dailyGames: Array<GameToken> = [];
-  private language?: string;
-  private wordIdInUse?: string;
-  private wordList?: Array<string>;
-  private guessWords?: Array<string>;
-  private stopWords?: Array<string>;
-  private cacheExpiration: number;
-
-  constructor() {
-    let data: GameServiceData = JSON.parse(
-      localStorage.getItem(gameServiceDataKey) || "{}"
-    );
-    this.guessWords = data.guessWords;
-    this.stopWords = data.stopWords;
-    this.cacheExpiration = data.cacheExpiration || 0;
-  }
-
-  async init(language: string): Promise<void> {
+  constructor(language: string) {
     this.language = language;
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    let dailyGamesRaw = await this.backendGet(bucketKeys.dailyGames);
-    this.dailyGames = dailyGamesRaw.split("\n").map((line) => {
-      let [gameId, wordId] = line.split(",");
-      return { gameId, wordId };
-    });
-
-    if (!this.guessWords || this.cacheExpiration < currentTime) {
-      let guessWords_string = await this.backendGet(bucketKeys.guessWords);
-      this.guessWords = guessWords_string.split("\n");
-      this.cacheExpiration = currentTime + 60 * 60;
-      this.saveCache();
-    }
-
-    if (!this.stopWords || this.cacheExpiration < currentTime) {
-      let stopWords_string = await this.backendGet(bucketKeys.stopWords);
-      this.stopWords = stopWords_string.split("\n");
-      this.cacheExpiration = currentTime + 60 * 60;
-      this.saveCache();
-    }
-  }
-
-  private async backendGet(key: string): Promise<string> {
-    let response = await fetch(`${BACKEND_BUCKET}/${this.language}/${key}`);
-    if (!response.ok) {
-      throw new Error(errorMessages.backend.any);
-    }
-    return await response.text();
+    this.backendApi = new BackendApi();
   }
 
   async getWordList(wordId: string): Promise<string[]> {
-    if (this.wordIdInUse != wordId || !this.wordList) {
-      this.wordIdInUse = wordId;
-      let wordListString = await this.backendGet(wordId);
-      this.wordList = wordListString.split(",");
-    }
-    return this.wordList;
+    const wordListString = await this.backendApi.get(`${this.language}/${wordId}`, true, null);
+    return wordListString.split(",");
   }
 
-  isWord(word: string): boolean {
-    if (this.guessWords) {
-      return this.guessWords.includes(word.toLowerCase());
-    }
-    return true;
+  async isWord(word: string): Promise<boolean> {
+    const guessWordsString = await this.backendApi.get(`${this.language}/${bucketKeys.guessWords}`, false, 3600);
+    const guessWords = guessWordsString.split("\n")
+    return guessWords.includes(word.toLowerCase());
   }
 
-  isStopWord(word: string): boolean {
-    if (this.stopWords) {
-      return this.stopWords.includes(word.toLowerCase());
-    }
-    return false;
+  async isStopWord(word: string): Promise<boolean> {
+    const stopWordsString = await this.backendApi.get(`${this.language}/${bucketKeys.stopWords}`, false, 3600);
+    const stopWords = stopWordsString.split("\n")
+    return stopWords.includes(word.toLowerCase());
   }
 
-  todaysGameToken(): GameToken {
-    return this.dailyGames.slice(-1)[0]
+  async dailyGameTokens(): Promise<GameToken[]> {
+    const gameTokensString = await this.backendApi.get(`${this.language}/${bucketKeys.dailyGames}`, false, 60);
+    return gameTokensString.split("\n").map(token => {
+      const [gameId, wordId] = token.split(",");
+      return {gameId, wordId};
+    });
   }
 
-  saveCache(): void {
-    localStorage.setItem(
-      gameServiceDataKey,
-      JSON.stringify({
-        guessWords: this.guessWords,
-        stopWords: this.stopWords,
-        cacheExpiration: this.cacheExpiration,
-      })
-    );
+  async todaysGameToken(): Promise<GameToken> {
+    const gameTokens = await this.dailyGameTokens();
+    return gameTokens.slice(-1)[0];
   }
 };
-
-const gameServiceInstance = new GameService();
-export { gameServiceInstance as gameService };

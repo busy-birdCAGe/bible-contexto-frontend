@@ -1,28 +1,23 @@
-import { bucketKeys, errorMessages } from "../constants";
-import { BACKEND_BUCKET } from "../env";
+import { bucketKeys } from "../constants";
 import { getWordIndex, stemWord } from "../utils";
+import BackendApi from "../api"
 
 
 export default class WordIdFinder {
-  language: string;
+  private language: string;
+  private backendApi: BackendApi;
 
   constructor(language: string) {
     this.language = language;
+    this.backendApi = new BackendApi();
   }
 
   async getWordId(word: string): Promise<string> {
-    const wordToIdMapping = await this.backendGet(bucketKeys.wordToIdMapping);
+    const wordIdMappingString = await this.backendApi.get(`${this.language}/${bucketKeys.wordToIdMapping}`, true, 3600);
+    const wordToIdMapping = JSON.parse(wordIdMappingString);
     const wordList = Object.keys(wordToIdMapping);
     const stemmedWord = stemWord(word);
     const index = getWordIndex(stemmedWord, wordList);
     return wordToIdMapping[wordList[index]];
   };
-
-  async backendGet(key: string): Promise<Record<string, string>> {
-    let response = await fetch(`${BACKEND_BUCKET}/${this.language}/${key}`);
-    if (!response.ok) {
-      throw new Error(errorMessages.backend.any);
-    }
-    return await response.json();
-  }
 }

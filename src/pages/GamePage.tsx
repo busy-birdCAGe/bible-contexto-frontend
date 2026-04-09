@@ -4,7 +4,7 @@ import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import { gameService } from "../services/GameService";
+import GameService from "../services/GameService";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import DropDownMenu from "../components/DropDownMenu";
@@ -54,12 +54,12 @@ const GamePage = () => {
   }
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const gameService = new GameService(language);
 
   useEffect(() => {
-    gameService.init(language).then(() => {
-      let todaysDailyGame = gameService.todaysGameToken();
-      const currentGame = gameToken || todaysDailyGame;
-      dispatch(setCurrentGame(currentGame));
+    gameService.todaysGameToken().then((todaysGameToken) => {
+      const currentGameToken = gameToken || todaysGameToken;
+      dispatch(setCurrentGame(currentGameToken));
     });
   }, []);
 
@@ -85,12 +85,14 @@ const GamePage = () => {
         setInputValue("");
         return;
       }
-      if (gameService.isStopWord(trimmedInput)) {
+      const isStopWord = await gameService.isStopWord(trimmedInput);
+      if (isStopWord) {
         setErrorMessage(`${normalizeWord(trimmedInput)} is too common`);
         setInputValue("");
         return;
       }
-      if (!gameService.isWord(trimmedInput)) {
+      const isWord = await gameService.isWord(trimmedInput);
+      if (!isWord) {
         setErrorMessage(
           `${normalizeWord(trimmedInput)} is not in the NIV Bible`
         );

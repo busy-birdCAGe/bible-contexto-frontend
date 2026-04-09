@@ -5,6 +5,7 @@ import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import HelpSection from "./HelpSection";
 import PreviousGames from "./PreviousGames";
+import CreateGame from "./CreateGame";
 
 
 interface DropDownItemProps {
@@ -36,6 +37,7 @@ const DropDownMenu = () => {
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const [previousGamesVisible, setPreviousGamesVisible] =
     useState<boolean>(false);
+  const [createGameVisible, setCreateGameVisible] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | SVGElement>(null);
   const open = Boolean(anchorEl);
 
@@ -55,6 +57,10 @@ const DropDownMenu = () => {
     setPreviousGamesVisible(true);
   };
 
+  const showCreateGame = () => {
+    setCreateGameVisible(true);
+  }
+
   return (
       <Box
         sx={{
@@ -68,6 +74,7 @@ const DropDownMenu = () => {
           visible={previousGamesVisible}
           setVisibility={setPreviousGamesVisible}
         />
+        <CreateGame visible={createGameVisible} setVisibility={setCreateGameVisible} />
         <IoMenu
           onClick={handleClick}
           style={{ color: "white", fontSize: "1.5em", cursor: "pointer" }}
@@ -94,6 +101,11 @@ const DropDownMenu = () => {
           <DropDownItem
             text="Previous Games"
             handler={showPreviousGames}
+            closeHandler={handleClose}
+          ></DropDownItem>
+          <DropDownItem
+            text="Create Game"
+            handler={showCreateGame}
             closeHandler={handleClose}
           ></DropDownItem>
         </Menu>

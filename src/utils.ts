@@ -36,9 +36,6 @@ export function stemWord(word: string): string {
   }
 
 export function getWordIndex(word: string, wordList: string[]): number {
-  if (wordList.length == 0) {
-    throw Error(errorMessages.guessing.noData);
-  }
   let index = wordList.indexOf(word);
   if (index == -1 && word.endsWith("s")) {
     index = wordList.indexOf(word.slice(0, -1));
