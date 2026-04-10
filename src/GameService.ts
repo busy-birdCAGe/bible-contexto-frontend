@@ -58,11 +58,12 @@ export default class GameService {
 
   async getHintWord(wordId: string, guesses: Guess[]): Promise<string> {
     const wordList = await this.getWordList(wordId);
-    const scores = guesses.map((guess) => guess.score);
+    const guessWords = await this.guessWords();
+    const guessScores = guesses.map((guess) => guess.score);
+    const scores = [...guessScores, wordList.length + 1]; // Add default for no guesses
     const minIndex = Math.min(...scores) - 1;
     const hintIndex = Math.ceil(minIndex / 2);
     const stemmedHintWord = wordList[hintIndex];
-    const guessWords = await this.guessWords();
     let hintWord = stemmedHintWord;
     for (let guessWord of guessWords) {
       if (stemWord(guessWord) === stemmedHintWord) {
