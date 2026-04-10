@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import WordIdFinder from "../services/WordIdFinder";
+import GameService from "../GameService";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useLanguage } from "../state/selectors";
@@ -17,7 +17,7 @@ const initialState = { word: '', wordId: '', shareEnabled: false, info: '' }
 
 const CreateGame = ({ setVisibility, visible }: CreateGameProps) => {
   const language = useLanguage();
-  const wordIdFinder = new WordIdFinder(language);
+  const gameService = new GameService(language);
   const ref = useRef<HTMLDivElement | null>(null);
   const [state, setState] = useState(initialState);
 
@@ -60,7 +60,7 @@ const CreateGame = ({ setVisibility, visible }: CreateGameProps) => {
   const handleSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key != "Enter" || !state.word.trim()) return;
     try {
-      const id = await wordIdFinder.getWordId(state.word.trim());
+      const id = await gameService.getWordId(state.word.trim());
       setState(prev => ({ ...prev, info: `'${state.word}' is available!`, wordId: id, shareEnabled: true }));
     } catch (e) {
       setState(prev => ({ ...prev, info: `'${state.word}' is not available`, shareEnabled: false }));

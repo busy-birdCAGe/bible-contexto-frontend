@@ -4,7 +4,7 @@ import Guesses from "../components/Guesses";
 import Title from "../components/Title";
 import GuessInput from "../components/GuessInput";
 import { useState, useEffect } from "react";
-import GameService from "../services/GameService";
+import GameService from "../GameService";
 import GameInfoHeader from "../components/GameInfoHeader";
 import CongratsSection from "../components/CongratsSection";
 import DropDownMenu from "../components/DropDownMenu";
@@ -23,7 +23,7 @@ import {
   setColorCounts,
   setWordFound,
   setCurrentGame,
-  incrementGuessCount
+  incrementGuessCount,
 } from "../state/reducer";
 import { 
   useWordFound,

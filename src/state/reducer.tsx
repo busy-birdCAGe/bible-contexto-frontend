@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { Guess } from '../components/Guesses'
 import { languages } from '../constants';
 
 // If breaking changes are made, create a migration in migrations.tsx
@@ -16,6 +15,12 @@ export interface ColorCounts {
   redCount: number;
 }
 
+export interface Guess {
+  score: number;
+  word: string;
+  stemmed_word: string;
+}
+
 export interface GameState {
   current?: Guess;
   guesses: Guess[];
@@ -23,6 +28,7 @@ export interface GameState {
   colorCounts?: ColorCounts;
   wordFound: boolean;
   wordId: string;
+  hint?: string;
 }
 
 const initialState: RootState = {
@@ -31,6 +37,13 @@ const initialState: RootState = {
     language: languages.english,
     gameStates: {}
 }
+
+const createInitialGameState = (wordId: string): GameState => ({
+    guesses: [],
+    guessCount: 0,
+    wordFound: false,
+    wordId,
+})
 
 const rootSlice = createSlice({
     name: 'root',
@@ -54,16 +67,14 @@ const rootSlice = createSlice({
             const { gameId, wordId } = action.payload;
             state.currentGameId = gameId
             if (!state.gameStates[gameId]) {
-                state.gameStates[gameId] = {
-                    guesses: [],
-                    guessCount: 0,
-                    wordFound: false,
-                    wordId,
-                };
+                state.gameStates[gameId] = createInitialGameState(wordId);
             }
         },
         setLanguage(state, action) {
             state.language = action.payload.language
+        },
+        setHint(state, action) {
+            state.gameStates[state.currentGameId].hint = action.payload.hint;
         }
     }
 })
@@ -74,7 +85,8 @@ export const {
     setColorCounts,
     setWordFound,
     setCurrentGame,
-    setLanguage
+    setLanguage,
+    setHint,
 } = rootSlice.actions
 
 export default rootSlice.reducer;

@@ -1,11 +1,7 @@
 import { Box } from "@mui/material";
 import WordCard from "./WordCard";
+import { Guess } from "../state/reducer";
 
-export interface Guess {
-  score: number;
-  word: string;
-  stemmed_word: string;
-}
 interface GuessesProps {
   currentGuess?: Guess; 
   guesses: Guess[];

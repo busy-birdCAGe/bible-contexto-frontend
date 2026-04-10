@@ -72,6 +72,11 @@ const selectWordId = createSelector(
   (game) => game?.wordId
 );
 
+const selectHint = createSelector(
+  [selectCurrentGame],
+  (game) => game?.hint
+);
+
 /**
  * ------------------------
  * Pre-built hooks
@@ -107,3 +112,6 @@ export const useWordId = () =>
 
 export const useLanguage = () =>
   useAppSelector(selectLanguage);
+
+export const useHint = () =>
+  useAppSelector(selectHint);
